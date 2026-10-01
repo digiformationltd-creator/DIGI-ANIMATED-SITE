@@ -1,0 +1,787 @@
+<USER_REQUEST>
+You are now the MASTER INTEGRATION DIRECTOR for the DigiFormation cinematic website.
+
+IMPORTANT:
+Do NOT redesign, rewrite, refactor, rename, delete, or replace the existing cinematic scenes unnecessarily.
+
+Your job in this phase is to integrate the five independently built cinematic service films into ONE coherent DigiFormation cinematic ecosystem while preserving the existing work.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. THE FIVE CINEMATIC FILMS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The website must contain exactly five major cinematic service experiences:
+
+01 — UK LTD FORMATION
+02 — US LLC FORMATION
+03 — COMPANY COMPLIANCE
+04 — WEBSITE / 3D WEBSITE / AGENTIC SOFTWARE
+05 — DIGI BIZ OS
+
+Each service is an independent cinematic film.
+
+They are NOT conventional card-based service pages.
+
+Each page must have its own:
+
+* cinematic scroll timeline
+* scenes
+* camera choreography
+* environments
+* storytelling
+* progression
+* completion state
+* responsive behavior
+* reduced-motion behavior
+
+The five films together form one DigiFormation ecosystem.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. MASTER ENTRY EXPERIENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create a cinematic master entry/navigation experience.
+
+Do NOT create a generic SaaS homepage.
+
+The opening should establish:
+
+DIGIFORMATION
+
+"BUILD YOUR BUSINESS.
+BUILD YOUR DIGITAL FUTURE."
+
+Then reveal the five cinematic pathways as physical / spatial / cinematic navigation points rather than ordinary rectangular cards.
+
+Possible presentation:
+
+A dark premium architectural environment.
+
+Five illuminated pathways / portals / physical service stations / cinematic doors / spatial markers.
+
+Each represents:
+
+UK LTD
+US LLC
+COMPLIANCE
+DIGITAL BUILD
+DIGI BIZ OS
+
+The user can select one.
+
+The navigation must feel like entering a film, not clicking a dashboard.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. SERVICE SELECTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+When the user selects a service:
+
+Transition from the master environment into that service's dedicated cinematic world.
+
+Example:
+
+MASTER SPACE
+↓
+UK LTD
+↓
+UK Formation Film
+
+OR
+
+MASTER SPACE
+↓
+DIGI BIZ OS
+↓
+Digi Biz OS Product Film
+
+The transition must feel intentional and cinematic.
+
+Avoid:
+
+* abrupt page flashes
+* generic fade-to-white
+* loading-screen aesthetics
+* dashboard-style navigation
+* excessive UI overlays
+
+Use:
+
+* camera movement
+* environmental transition
+* lighting transition
+* depth
+* physical spatial movement
+* subtle sound-ready transition events
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. GLOBAL CINEMATIC LANGUAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+All five films should belong to the same visual universe.
+
+Global identity:
+
+WHITE
+GREY
+BLACK
+GLASS
+METALLIC SURFACES
+
+Grey must remain a major visual color.
+
+Use restrained accent lighting where useful.
+
+The overall feeling should be:
+
+premium
+professional
+cinematic
+architectural
+technological
+realistic
+commercial
+high-end
+
+Do NOT turn the website into cyberpunk.
+
+Do NOT make everything neon.
+
+Do NOT use generic futuristic holograms.
+
+Do NOT use Matrix-style code.
+
+Do NOT use floating SaaS cards.
+
+Do NOT use generic AI-generated corporate stock scenes.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. GLOBAL NAVIGATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create a minimal cinematic navigation system.
+
+It must allow the user to move between:
+
+UK LTD
+US LLC
+COMPLIANCE
+DIGITAL BUILD
+DIGI BIZ OS
+
+The navigation must remain visually secondary to the film.
+
+Possible implementation:
+
+small cinematic film-strip
+minimal vertical timeline
+spatial menu
+subtle edge navigation
+minimal service indicator
+
+The user must always understand:
+
+WHERE AM I?
+
+WHAT SERVICE AM I WATCHING?
+
+HOW MUCH OF THE FILM HAVE I EXPERIENCED?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+6. FILM PROGRESS SYSTEM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Each cinematic page should have its own progress system.
+
+Example:
+
+UK LTD
+01 / 08
+
+US LLC
+01 / 08
+
+COMPLIANCE
+01 / 08
+
+DIGITAL BUILD
+01 / 08
+
+DIGI BIZ OS
+01 / 08
+
+Do not force identical scene counts if the existing films have different numbers.
+
+The system should dynamically represent the actual timeline.
+
+Progress must respond to scroll.
+
+Scrolling forward:
+
+timeline progresses.
+
+Scrolling backward:
+
+timeline reverses.
+
+Do NOT implement scroll as a collection of disconnected animations.
+
+It must remain a continuous cinematic timeline.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+7. CROSS-FILM TRANSITIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+At the end of each film, provide a cinematic continuation point.
+
+Example:
+
+UK LTD COMPLETE
+
+↓
+
+"BUILD THE BUSINESS ONLINE"
+
+↓
+
+DIGITAL BUILD
+
+Likewise:
+
+US LLC COMPLETE
+→ DIGITAL BUILD
+
+COMPLIANCE COMPLETE
+→ DIGITAL BUILD
+
+DIGITAL BUILD COMPLETE
+→ DIGI BIZ OS
+
+DIGI BIZ OS COMPLETE
+→ RETURN TO DIGIFORMATION
+
+These are navigation opportunities.
+
+Do NOT automatically force the user into the next film.
+
+The user must remain in control.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+8. COMPLETION STATES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Each film must have a strong cinematic ending.
+
+UK LTD:
+
+"UK COMPANY INCORPORATED"
+"BUSINESS INFRASTRUCTURE READY"
+
+US LLC:
+
+"US LLC FORMATION"
+"READY FOR BUSINESS"
+
+COMPLIANCE:
+
+"COMPANY COMPLIANCE"
+"UP TO DATE"
+
+DIGITAL BUILD:
+
+"WEBSITE"
+"3D WEBSITE"
+"AGENTIC SOFTWARE"
+"DIGITAL BUSINESS SYSTEM"
+
+DIGI BIZ OS:
+
+"DIGI BIZ OS"
+"THE VOICE-CONTROLLED BUSINESS OPERATING SYSTEM"
+
+The ending should feel like the final shot of a premium commercial.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+9. REAL ASSETS FIRST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Audit the existing project and supplied assets before creating replacements.
+
+Prioritize:
+
+DigiFormation logo
+DigiFormation website visuals
+DigiFormation screenshots
+Digi Biz OS screenshots
+Digi Biz OS product visuals
+approved reference material
+approved photography
+
+Do not recreate an existing real asset unnecessarily.
+
+If a real asset exists, use it.
+
+If a public government/service reference is needed, use an authentic public reference where legally and technically appropriate.
+
+If no suitable asset exists, create a believable fictional/demo representation.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+10. BRAND CONSISTENCY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Every film must clearly belong to DigiFormation.
+
+Use the real DigiFormation branding supplied in the project.
+
+Do not invent a new logo.
+
+Do not create random brand identities for individual services.
+
+The five services are different films inside the same company.
+
+Brand hierarchy:
+
+DIGIFORMATION
+↓
+SERVICE
+↓
+CINEMATIC STORY
+↓
+BUSINESS RESULT
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+11. NO DUPLICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Audit the existing code before implementation.
+
+Identify:
+
+* duplicated navigation
+* duplicated scene managers
+* duplicated animation engines
+* duplicated asset loaders
+* duplicated progress systems
+* conflicting scroll listeners
+* duplicated global styles
+* duplicated WebGL canvases
+* unnecessary rendering loops
+
+Where a shared system already exists, reuse it.
+
+Do NOT perform unrelated refactoring.
+
+Only make changes necessary for integration.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+12. ROUTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Each film should have a clean dedicated route.
+
+Use the project's existing routing architecture if one already exists.
+
+Conceptually:
+
+/uk-ltd-formation
+/us-llc-formation
+/company-compliance
+/digital-build
+/digi-biz-os
+
+Do NOT blindly replace the project's existing routing system.
+
+Inspect first.
+
+Preserve existing working routes.
+
+Ensure direct navigation to every cinematic page works.
+
+Ensure browser refresh works.
+
+Ensure forward/back navigation behaves correctly.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+13. DEEP LINKING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+A user should be able to directly open any cinematic film.
+
+Example:
+
+/uk-ltd-formation
+
+must open the UK LTD film directly.
+
+It must NOT require entering through the master page first.
+
+Likewise:
+
+/digi-biz-os
+
+must open directly into the Digi Biz OS cinematic experience.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+14. BACK / HOME BEHAVIOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Every film needs a subtle way to return to the master DigiFormation cinematic environment.
+
+Do NOT use a giant HOME button.
+
+Use a minimal branded navigation element.
+
+Example:
+
+DIGIFORMATION
+
+or
+
+← DIGIFORMATION
+
+Keep it cinematic and unobtrusive.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+15. MOBILE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The five films must remain usable on mobile.
+
+Do NOT simply shrink the desktop experience.
+
+Adapt:
+
+camera distance
+scene composition
+text placement
+3D object scale
+scroll pacing
+navigation
+progress indicator
+
+Avoid:
+
+horizontal overflow
+tiny unreadable text
+overloaded 3D scenes
+excessive WebGL rendering
+broken camera framing
+
+If necessary, use simplified cinematic compositions on mobile while preserving the story.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+16. REDUCED MOTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Respect prefers-reduced-motion.
+
+When reduced motion is enabled:
+
+preserve story
+preserve navigation
+preserve hierarchy
+preserve important visual states
+
+but reduce:
+
+camera movement
+parallax
+particle effects
+DOF transitions
+large transformations
+continuous animation
+
+Do NOT disable the entire experience.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+17. PERFORMANCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The five films must not behave like five WebGL applications running simultaneously.
+
+Only initialize heavy cinematic resources when needed.
+
+Unload or suspend inactive experiences where appropriate.
+
+Avoid:
+
+memory leaks
+duplicate animation loops
+unbounded RAF callbacks
+unnecessary texture duplication
+unnecessary WebGL contexts
+scroll-event storms
+
+Use:
+
+lazy loading
+asset preloading at appropriate points
+GPU-conscious effects
+device capability detection
+mobile performance tiers
+
+Do not sacrifice the cinematic quality unnecessarily.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+18. TRANSITION PERFORMANCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Transitions between films must feel seamless.
+
+Avoid long blank screens.
+
+If assets need loading, create a minimal cinematic loading state.
+
+Example:
+
+DIGIFORMATION
+
+INITIALIZING EXPERIENCE...
+
+with restrained progress.
+
+No generic spinner-heavy loading screen.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+19. AUDIO-READY ARCHITECTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Do not add unnecessary music if the project does not already have approved audio.
+
+Instead, expose clean cinematic event hooks for future audio.
+
+Examples:
+
+film:start
+scene:change
+service:selected
+verification:complete
+company:incorporated
+compliance:resolved
+website:complete
+3d:activated
+voice:command
+agent:processing
+agent:complete
+film:complete
+
+These should be ready for future sound design.
+
+Do not invent a full audio system unless one already exists.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+20. ACCESSIBILITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Maintain:
+
+keyboard navigation
+visible focus states
+semantic navigation
+accessible labels
+readable contrast
+reduced-motion support
+
+The cinematic layer must not destroy basic website accessibility.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+21. SEO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Each cinematic film must remain a real indexable webpage.
+
+Do not hide all meaningful content inside WebGL.
+
+Important service information must exist in the DOM.
+
+Each page should have appropriate:
+
+title
+meta description
+H1
+semantic headings
+service-specific text
+canonical URL
+Open Graph metadata where project architecture supports it
+
+Do not duplicate identical metadata across all five pages.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+22. NO GOVERNMENT CONFUSION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Government entities and DigiFormation must remain visually and textually distinguishable.
+
+DigiFormation is a service provider.
+
+It is NOT:
+
+Companies House
+GOV.UK
+IRS
+a bank
+PayPal
+Stripe
+Wise
+or any other third-party provider.
+
+Do not imply government affiliation or guaranteed approval.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+23. FINAL MASTER EXPERIENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The completed ecosystem should feel like:
+
+ONE COMPANY
+
+FIVE CINEMATIC FILMS
+
+ONE DIGITAL BUSINESS JOURNEY
+
+The conceptual journey:
+
+START BUSINESS
+↓
+FORM COMPANY
+↓
+MAINTAIN COMPANY
+↓
+BUILD DIGITAL BUSINESS
+↓
+OPERATE WITH AGENTIC SOFTWARE
+
+DigiFormation should feel like the company connecting these stages.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+24. TECHNICAL SELF-REVIEW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After implementation, perform THREE separate reviews.
+
+PASS 1 — FUNCTIONAL
+
+Verify:
+
+* all five routes
+* direct URL access
+* refresh
+* browser back/forward
+* service navigation
+* scroll forward
+* scroll reverse
+* completion states
+* mobile
+* reduced motion
+
+PASS 2 — VISUAL
+
+Review:
+
+* camera continuity
+* typography
+* spacing
+* lighting
+* material consistency
+* grey/white/black balance
+* DigiFormation branding
+* transition quality
+* visual hierarchy
+
+PASS 3 — PERFORMANCE
+
+Inspect:
+
+* console errors
+* runtime errors
+* WebGL errors
+* memory growth
+* duplicate animation loops
+* asset loading
+* mobile behavior
+* unnecessary network requests
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+25. EVIDENCE REQUIRED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Do not say "done" without evidence.
+
+Report:
+
+1. Routes created/verified
+2. Files changed
+3. Existing files reused
+4. Shared systems reused
+5. New integration systems added
+6. Tests executed
+7. Browser/runtime results
+8. Console status
+9. Mobile result
+10. Reduced-motion result
+11. Performance observations
+12. Any remaining limitations
+
+Include concrete:
+
+file paths
+commands
+test results
+HTTP responses
+screenshots or runtime evidence where available
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+26. HARD SCOPE BOUNDARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This phase is ONLY:
+
+MASTER NAVIGATION
++
+FIVE-FILM INTEGRATION
++
+ROUTING
++
+CROSS-FILM TRANSITIONS
++
+SHARED CINEMATIC SYSTEM INTEGRATION
++
+RESPONSIVE / ACCESSIBILITY / PERFORMANCE INTEGRATION
+
+Do NOT redesign existing individual films.
+
+Do NOT rewrite completed scenes.
+
+Do NOT create new service stories.
+
+Do NOT change the business logic of any service.
+
+Do NOT invent missing provider lists.
+
+Do NOT replace real supplied assets.
+
+Do NOT perform unrelated cleanup.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+27. STOP CONDITION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After the integration work and three self-review passes:
+
+STOP.
+
+Do not continue into additional creative redesign.
+
+Provide the evidence-based implementation report.
+
+The next phase will only begin after explicit instruction.
+
+FINAL QUALITY TARGET:
+
+The user should feel that they are entering five different premium cinematic films that all belong to one sophisticated DigiFormation universe — not browsing a normal service website.
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-10-01T13:10:39+05:00.
+</ADDITIONAL_METADATA>
