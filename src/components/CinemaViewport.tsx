@@ -123,6 +123,7 @@ export const CinemaViewport: React.FC<CinemaViewportProps> = ({
       if (perf.shouldRender()) {
         cameraController.update(delta);
         sceneManager.update(smoothProgressRef.current, delta);
+        lightingRig.setAtmosphere(smoothProgressRef.current);
 
         const active = sceneManager.getActiveScene();
         if (active && active.id !== lastActiveSceneId) {
@@ -192,19 +193,7 @@ export const CinemaViewport: React.FC<CinemaViewportProps> = ({
     AudioAtmosphereEngine.getInstance().emitEvent("film:start", { filmId: film.id });
   }, [film.id]);
 
-  // Update scene manager and lighting atmosphere on smooth progress change
-  useEffect(() => {
-    if (sceneManagerRef.current) {
-      sceneManagerRef.current.update(smoothProgress, 0.016);
-      const active = sceneManagerRef.current.getActiveScene();
-      if (active) {
-        onSceneChange(active);
-      }
-    }
-    if (lightingRigRef.current) {
-      lightingRigRef.current.setAtmosphere(smoothProgress);
-    }
-  }, [smoothProgress]);
+
 
   // Adjust quality tier changes
   useEffect(() => {

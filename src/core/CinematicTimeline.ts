@@ -14,6 +14,8 @@ export class CinematicTimeline {
   private rafId: number = 0;
   private isDestroyed: boolean = false;
   private reducedMotion: boolean = false;
+  private mediaQueryList: MediaQueryList | null = null;
+  private onMotionChange: ((e: MediaQueryListEvent) => void) | null = null;
 
   constructor() {
     this.checkReducedMotion();
@@ -24,11 +26,12 @@ export class CinematicTimeline {
 
   private checkReducedMotion(): void {
     if (typeof window !== "undefined") {
-      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-      this.reducedMotion = mediaQuery.matches;
-      mediaQuery.addEventListener("change", (e) => {
+      this.mediaQueryList = window.matchMedia("(prefers-reduced-motion: reduce)");
+      this.reducedMotion = this.mediaQueryList.matches;
+      this.onMotionChange = (e: MediaQueryListEvent) => {
         this.reducedMotion = e.matches;
-      });
+      };
+      this.mediaQueryList.addEventListener("change", this.onMotionChange);
     }
   }
 
@@ -171,6 +174,11 @@ export class CinematicTimeline {
       window.removeEventListener("scroll", this.onWindowScroll);
       window.removeEventListener("resize", this.onWindowScroll);
       window.removeEventListener("keydown", this.onKeyDown);
+      if (this.mediaQueryList && this.onMotionChange) {
+        this.mediaQueryList.removeEventListener("change", this.onMotionChange);
+        this.mediaQueryList = null;
+        this.onMotionChange = null;
+      }
     }
     if (this.lenis) {
       this.lenis.destroy();
