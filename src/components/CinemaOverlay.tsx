@@ -46,11 +46,6 @@ export const CinemaOverlay: React.FC<CinemaOverlayProps> = ({
           <span className="text-slate-500">|</span>
           <span className="text-slate-400">{telemetry.focalLength}</span>
         </div>
-        <div className="hidden sm:flex items-center gap-4">
-          <span className="text-slate-300">{timecodeString}</span>
-          <span className="text-slate-500">|</span>
-          <span className="text-slate-400">{telemetry.fps} FPS</span>
-        </div>
       </div>
 
       <div className="cinema-letterbox-bottom flex items-center justify-between px-4 sm:px-8 text-[10px] sm:text-[11px] font-mono text-slate-400">
@@ -60,6 +55,10 @@ export const CinemaOverlay: React.FC<CinemaOverlayProps> = ({
           <span className="text-slate-400">APERTURE {telemetry.aperture}</span>
           <span className="text-slate-500">·</span>
           <span className="text-slate-400">ISO {telemetry.iso}</span>
+          <span className="text-slate-500">·</span>
+          <span className="text-slate-300 font-semibold">{timecodeString}</span>
+          <span className="text-slate-500">·</span>
+          <span className="text-slate-400">{telemetry.fps} FPS</span>
         </div>
         <div className="flex items-center justify-between w-full sm:w-auto gap-3">
           <div className="flex items-center gap-1.5">

@@ -38,9 +38,9 @@ export class LightingRig {
     this.rimLight.position.set(0, 5, -5);
     scene.add(this.rimLight);
 
-    // 5. Emissive monitor bounce light (Illuminates desk and keyboard from screen)
-    this.screenBounceLight = new THREE.PointLight(0xdce7f5, 1.5, 3.5, 1.8);
-    this.screenBounceLight.position.set(0, 1.3, 0.2);
+    // 5. Emissive monitor bounce light (Illuminates desk and keyboard downwards from screen)
+    this.screenBounceLight = new THREE.PointLight(0xdce7f5, 1.2, 3.0, 2.0);
+    this.screenBounceLight.position.set(0, 0.78, 0.5);
     scene.add(this.screenBounceLight);
   }
 

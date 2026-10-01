@@ -85,17 +85,18 @@ export class SceneMasterPortals implements CinematicScene {
       tCtx.strokeRect(10, 10, 1580, 380);
 
       tCtx.fillStyle = "#38bdf8";
-      tCtx.font = "bold 24px monospace";
+      tCtx.font = "bold 22px monospace";
       tCtx.textAlign = "center";
-      tCtx.fillText("DIGIFORMATION CINEMATIC ECOSYSTEM", 800, 75);
+      tCtx.fillText("DIGIFORMATION CINEMATIC ECOSYSTEM", 800, 65);
 
       tCtx.fillStyle = "#ffffff";
-      tCtx.font = "900 64px sans-serif";
-      tCtx.fillText("BUILD YOUR BUSINESS. BUILD YOUR DIGITAL FUTURE.", 800, 180);
+      tCtx.font = "900 46px sans-serif";
+      tCtx.fillText("BUILD YOUR BUSINESS.", 800, 140);
+      tCtx.fillText("BUILD YOUR DIGITAL FUTURE.", 800, 205);
 
       tCtx.fillStyle = "#94a3b8";
-      tCtx.font = "24px sans-serif";
-      tCtx.fillText("FIVE INTEGRATED CINEMATIC REELS · SCROLL OR SELECT A PATHWAY BELOW", 800, 250);
+      tCtx.font = "20px sans-serif";
+      tCtx.fillText("FIVE INTEGRATED CINEMATIC REELS · SCROLL OR SELECT A PATHWAY BELOW", 800, 275);
     }
     const tTexture = new THREE.CanvasTexture(titleCanvas);
     tTexture.colorSpace = THREE.SRGBColorSpace;
