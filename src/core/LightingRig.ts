@@ -28,9 +28,9 @@ export class LightingRig {
     this.keyLight.shadow.radius = 2.5; // Soft cinematic penumbra
     scene.add(this.keyLight);
 
-    // 3. Controlled fill light (Cool steel tint)
-    this.fillLight = new THREE.DirectionalLight(0x94a3b8, 0.9);
-    this.fillLight.position.set(-5, 4, 3);
+    // 3. Controlled fill light (Soft ambient steel tint, no harsh top-left glare)
+    this.fillLight = new THREE.DirectionalLight(0x64748b, 0.45);
+    this.fillLight.position.set(-2, 3, 4);
     scene.add(this.fillLight);
 
     // 4. Sharp specular rim light (Outlines silhouettes and hardware edges)

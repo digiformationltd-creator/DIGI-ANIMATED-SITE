@@ -36,17 +36,7 @@ export const CinemaOverlay: React.FC<CinemaOverlayProps> = ({
   return (
     <>
       {/* 2.39:1 Cinema Letterbox Bars */}
-      <div className="cinema-letterbox-top flex items-center justify-between px-6 sm:px-8 text-[11px] font-mono text-slate-400">
-        <div className="hidden sm:flex items-center gap-4">
-          <span className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-slate-300">REC</span>
-          </span>
-          <span className="text-slate-400">{telemetry.aspectRatio}</span>
-          <span className="text-slate-500">|</span>
-          <span className="text-slate-400">{telemetry.focalLength}</span>
-        </div>
-      </div>
+      <div className="cinema-letterbox-top" />
 
       <div className="cinema-letterbox-bottom flex items-center justify-between px-4 sm:px-8 text-[10px] sm:text-[11px] font-mono text-slate-400">
         <div className="hidden sm:flex items-center gap-4">

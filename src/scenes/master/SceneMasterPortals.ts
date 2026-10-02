@@ -84,7 +84,7 @@ export class SceneMasterPortals implements CinematicScene {
 
     // B. Executive Cantilever Desk in Office Center
     const desk = new THREE.Group();
-    desk.position.set(0, 0, 0.5);
+    desk.position.set(0, 0, -1.0);
 
     // Dark walnut tabletop with brushed titanium perimeter
     const topGeo = new THREE.BoxGeometry(2.1, 0.05, 0.95);
@@ -181,8 +181,7 @@ export class SceneMasterPortals implements CinematicScene {
     this.deskMesh = desk;
     this.officeGroup.add(desk);
 
-    // C. Glowing Title Plaque (Perfect Screen-Safe Dimensions & Height)
-    // Width 2.3m, Height 0.38m, Position Y = 1.88m (Well inside top letterbox)
+    // C. Glowing Title Plaque (Screen-Safe Dimensions & Height)
     const titleCanvas = document.createElement("canvas");
     titleCanvas.width = 1600;
     titleCanvas.height = 320;
@@ -222,11 +221,10 @@ export class SceneMasterPortals implements CinematicScene {
       metalness: 0.1,
     });
     this.titleMesh = new THREE.Mesh(titleGeo, titleMat);
-    this.titleMesh.position.set(0, 1.88, -0.8);
+    this.titleMesh.position.set(0, 1.88, -2.0);
     this.officeGroup.add(this.titleMesh);
 
     // D. Five Spatial Process Stations (Screen-Safe Dimensions & Alignment)
-    // Width 0.46m each, Spacing 0.52m -> Total span 2.54m (Safely within ±1.35m)
     const films = [
       {
         num: "01",
@@ -408,8 +406,8 @@ export class SceneMasterPortals implements CinematicScene {
 
       const pMesh = new THREE.Mesh(pGeo, pMat);
       const posX = startX + idx * spacing;
-      // Gentle curve keeping all 5 perfectly in screen safe area
-      const posZ = -0.5 - Math.abs(idx - 2) * 0.14;
+      // Curved arc at Z = -2.2m
+      const posZ = -2.2 - Math.abs(idx - 2) * 0.14;
       const rotY = (idx - 2) * -0.06;
 
       pMesh.position.set(posX, 1.15, posZ);
@@ -434,7 +432,7 @@ export class SceneMasterPortals implements CinematicScene {
     this.sceneGroup.visible = false;
   }
 
-  // Camera trajectory designed so all visuals stay strictly within the screen
+  // Camera trajectory: Exterior Drone Sky -> Plaza -> Revolving Doors -> Executive Suite Inside
   public updateCamera(cameraController: CinematicCameraController, progress: number): void {
     const p = Math.max(0, Math.min(1, progress));
 
@@ -443,53 +441,53 @@ export class SceneMasterPortals implements CinematicScene {
     let fov: number;
 
     if (p < 0.35) {
-      // Stage 1: High Elevation Exterior Drone View looking at the Headquarters Building & Silver Steel Logo
+      // Stage 1: High Drone Aerial View framing the Google-Style Headquarters & Silver Steel Logo
       const t = p / 0.35;
       const ease = t * t * (3 - 2 * t);
 
       camPos = [
         0.0,
-        THREE.MathUtils.lerp(16.0, 3.8, ease),
-        THREE.MathUtils.lerp(32.0, 9.8, ease),
+        THREE.MathUtils.lerp(24.0, 3.2, ease),
+        THREE.MathUtils.lerp(46.0, 8.5, ease),
       ];
       camTarget = [
         0.0,
-        THREE.MathUtils.lerp(13.5, 2.4, ease),
-        THREE.MathUtils.lerp(0.0, 0.8, ease),
+        THREE.MathUtils.lerp(18.5, 2.0, ease),
+        THREE.MathUtils.lerp(1.0, 1.0, ease),
       ];
-      fov = THREE.MathUtils.lerp(46, 40, ease);
+      fov = THREE.MathUtils.lerp(46, 38, ease);
     } else if (p < 0.55) {
-      // Stage 2: Gliding smoothly through the Grand Glass Facade into the Executive Office Atrium
+      // Stage 2: Gliding through the grand entrance revolving doors into the executive foyer
       const t = (p - 0.35) / 0.20;
       const ease = t * t * (3 - 2 * t);
 
       camPos = [
         0.0,
-        THREE.MathUtils.lerp(3.8, 1.68, ease),
-        THREE.MathUtils.lerp(9.8, 4.0, ease),
+        THREE.MathUtils.lerp(3.2, 1.6, ease),
+        THREE.MathUtils.lerp(8.5, 1.2, ease),
       ];
       camTarget = [
         0.0,
-        THREE.MathUtils.lerp(2.4, 1.18, ease),
-        THREE.MathUtils.lerp(0.8, 0.0, ease),
+        THREE.MathUtils.lerp(2.0, 1.15, ease),
+        THREE.MathUtils.lerp(1.0, -2.0, ease),
       ];
-      fov = THREE.MathUtils.lerp(40, 36, ease);
+      fov = THREE.MathUtils.lerp(38, 36, ease);
     } else {
-      // Stage 3: Inside Executive Office Suite - All 5 Process Stations Perfectly Framed Within Screen Safe Zone
+      // Stage 3: Inside the Executive Suite - Desk & 5 Process Stations in Full Screen-Safe View
       const t = (p - 0.55) / 0.45;
       const ease = t * t * (3 - 2 * t);
 
       camPos = [
         0.0,
-        THREE.MathUtils.lerp(1.68, 1.52, ease),
-        THREE.MathUtils.lerp(4.0, 3.4, ease),
+        THREE.MathUtils.lerp(1.6, 1.45, ease),
+        THREE.MathUtils.lerp(1.2, 0.4, ease),
       ];
       camTarget = [
         0.0,
-        THREE.MathUtils.lerp(1.18, 1.12, ease),
-        THREE.MathUtils.lerp(0.0, -0.3, ease),
+        THREE.MathUtils.lerp(1.15, 1.1, ease),
+        THREE.MathUtils.lerp(-2.0, -2.2, ease),
       ];
-      fov = THREE.MathUtils.lerp(36, 35, ease);
+      fov = 36;
     }
 
     cameraController.setWaypoints(

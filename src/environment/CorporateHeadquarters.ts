@@ -266,8 +266,9 @@ export class CorporateHeadquarters {
     facadeTexture.magFilter = THREE.LinearFilter;
     this.canvasTextures.push(facadeTexture);
 
-    // Front Glass Curtain Wall Mesh
-    const facadeGeo = new THREE.PlaneGeometry(buildingWidth, buildingHeight);
+    // Front Upper Glass Curtain Wall Mesh (Levels 2 to 6, Y: 4.8m to 24m)
+    const upperFacadeH = buildingHeight - 4.8;
+    const facadeGeo = new THREE.PlaneGeometry(buildingWidth, upperFacadeH);
     const facadeMat = new THREE.MeshStandardMaterial({
       map: facadeTexture,
       roughness: 0.12,
@@ -277,19 +278,58 @@ export class CorporateHeadquarters {
       emissiveIntensity: 0.55,
     });
     const facadeMesh = new THREE.Mesh(facadeGeo, facadeMat);
-    facadeMesh.position.set(0, buildingHeight / 2, 1.0);
+    facadeMesh.position.set(0, 4.8 + upperFacadeH / 2, 1.0);
     this.group.add(facadeMesh);
 
-    // Building Main Structural Enclosure (Dark charcoal slate stone body)
-    const bodyGeo = new THREE.BoxGeometry(buildingWidth, buildingHeight, buildingDepth);
-    const bodyMat = new THREE.MeshStandardMaterial({
+    // Ground Floor Side Glass Panels (Flanking the central grand entrance portal)
+    const sideGlassW = (buildingWidth - 12) / 2; // 16m each
+    const sideGlassGeo = new THREE.PlaneGeometry(sideGlassW, 4.8);
+    const sideGlassMat = new THREE.MeshPhysicalMaterial({
+      color: 0x1e293b,
+      transparent: true,
+      opacity: 0.4,
+      roughness: 0.08,
+      metalness: 0.85,
+      transmission: 0.65,
+    });
+
+    const lSideGlass = new THREE.Mesh(sideGlassGeo, sideGlassMat);
+    lSideGlass.position.set(-6 - sideGlassW / 2, 2.4, 1.0);
+    this.group.add(lSideGlass);
+
+    const rSideGlass = new THREE.Mesh(sideGlassGeo, sideGlassMat);
+    rSideGlass.position.set(6 + sideGlassW / 2, 2.4, 1.0);
+    this.group.add(rSideGlass);
+
+    // Building Open Architectural Perimeter Enclosure (Allows unobstructed interior office view)
+    const wallMat = new THREE.MeshStandardMaterial({
       color: 0x080c14,
       roughness: 0.65,
       metalness: 0.25,
     });
-    const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
-    bodyMesh.position.set(0, buildingHeight / 2, -buildingDepth / 2 + 0.9);
-    this.group.add(bodyMesh);
+
+    // Rear Atrium Wall (Z = -14.0m)
+    const rearWallGeo = new THREE.BoxGeometry(buildingWidth, buildingHeight, 0.6);
+    const rearWall = new THREE.Mesh(rearWallGeo, wallMat);
+    rearWall.position.set(0, buildingHeight / 2, -14.0);
+    this.group.add(rearWall);
+
+    // Left Exterior Wall (X = -22m)
+    const sideWallGeo = new THREE.BoxGeometry(0.6, buildingHeight, 15.5);
+    const lSideWall = new THREE.Mesh(sideWallGeo, wallMat);
+    lSideWall.position.set(-buildingWidth / 2, buildingHeight / 2, -6.5);
+    this.group.add(lSideWall);
+
+    // Right Exterior Wall (X = +22m)
+    const rSideWall = new THREE.Mesh(sideWallGeo, wallMat);
+    rSideWall.position.set(buildingWidth / 2, buildingHeight / 2, -6.5);
+    this.group.add(rSideWall);
+
+    // Roof Slab (Y = 24m)
+    const roofGeo = new THREE.BoxGeometry(buildingWidth, 0.6, 15.5);
+    const roofMesh = new THREE.Mesh(roofGeo, wallMat);
+    roofMesh.position.set(0, buildingHeight, -6.5);
+    this.group.add(roofMesh);
 
     // Architectural Steel Mullions / Exterior Louvers
     const mullionMat = new THREE.MeshStandardMaterial({
@@ -299,6 +339,7 @@ export class CorporateHeadquarters {
     });
 
     for (let x = -buildingWidth / 2; x <= buildingWidth / 2; x += 4.0) {
+      if (Math.abs(x) < 3.5) continue; // Keep grand entrance open for camera
       const colGeo = new THREE.BoxGeometry(0.18, buildingHeight, 0.45);
       const colMesh = new THREE.Mesh(colGeo, mullionMat);
       colMesh.position.set(x, buildingHeight / 2, 1.05);
@@ -306,7 +347,7 @@ export class CorporateHeadquarters {
     }
 
     // ========================================================
-    // 4. GRAND ENTRANCE CANOPY & REVOLVING GLASS DOORS
+    // 4. GRAND ENTRANCE CANOPY & SLIDING GLASS PORTAL
     // ========================================================
     // Cantilevered Architectural Canopy (18m wide x 8m deep)
     const canopyGeo = new THREE.BoxGeometry(18, 0.35, 8);
@@ -336,24 +377,39 @@ export class CorporateHeadquarters {
       }
     }
 
-    // Grand Entrance Door Portal Frame (Polished Chrome Steel)
-    const portalGeo = new THREE.BoxGeometry(10.5, 4.2, 0.25);
-    const portal = new THREE.Mesh(portalGeo, this.materials.getPolishedChrome());
-    portal.position.set(0, 2.1, 1.15);
-    this.group.add(portal);
+    // Grand Entrance Door Portal Frame (Polished Chrome Steel Posts & Header)
+    const postGeo = new THREE.BoxGeometry(0.4, 4.4, 0.4);
+    const leftPost = new THREE.Mesh(postGeo, this.materials.getPolishedChrome());
+    leftPost.position.set(-4.5, 2.2, 1.15);
+    this.group.add(leftPost);
 
-    // Revolving Glass Door Cylinder
-    const revGeo = new THREE.CylinderGeometry(1.8, 1.8, 4.0, 24, 1, true);
-    const revMat = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
+    const rightPost = new THREE.Mesh(postGeo, this.materials.getPolishedChrome());
+    rightPost.position.set(4.5, 2.2, 1.15);
+    this.group.add(rightPost);
+
+    const headerGeo = new THREE.BoxGeometry(9.4, 0.4, 0.4);
+    const headerMesh = new THREE.Mesh(headerGeo, this.materials.getPolishedChrome());
+    headerMesh.position.set(0, 4.4, 1.15);
+    this.group.add(headerMesh);
+
+    // Architectural Automatic Sliding Glass Doors (Parted Open for Smooth Camera Pass-Through)
+    const doorGeo = new THREE.BoxGeometry(2.4, 4.0, 0.08);
+    const doorMat = new THREE.MeshPhysicalMaterial({
+      color: 0x93c5fd,
       transparent: true,
-      opacity: 0.35,
+      opacity: 0.25,
       roughness: 0.05,
-      metalness: 0.6,
+      metalness: 0.8,
+      transmission: 0.85,
+      ior: 1.5,
     });
-    const revolving = new THREE.Mesh(revGeo, revMat);
-    revolving.position.set(0, 2.0, 1.15);
-    this.group.add(revolving);
+    const leftDoor = new THREE.Mesh(doorGeo, doorMat);
+    leftDoor.position.set(-3.2, 2.0, 1.15);
+    this.group.add(leftDoor);
+
+    const rightDoor = new THREE.Mesh(doorGeo, doorMat);
+    rightDoor.position.set(3.2, 2.0, 1.15);
+    this.group.add(rightDoor);
 
     // ========================================================
     // 5. CROWN PARAPET & REAL SILVER STEEL DIGIFORMATION LOGO
