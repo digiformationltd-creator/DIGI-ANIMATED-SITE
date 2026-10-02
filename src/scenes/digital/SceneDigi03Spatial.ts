@@ -45,7 +45,6 @@ export class SceneDigi03Spatial implements CinematicScene {
   private canvas: HTMLCanvasElement;
   private canvasTexture: THREE.CanvasTexture;
   private monitorMesh: THREE.Mesh | null = null;
-  private torusMesh: THREE.Mesh | null = null;
   private materials = MaterialFactory.getInstance();
 
   constructor() {
@@ -77,18 +76,37 @@ export class SceneDigi03Spatial implements CinematicScene {
     this.monitorMesh.position.set(0, 1.05, 0);
     this.sceneGroup.add(this.monitorMesh);
 
-    // Dynamic 3D Spatial Geometry floating beside screen
-    const torusGeo = new THREE.TorusKnotGeometry(0.12, 0.035, 128, 32);
-    const torusMat = new THREE.MeshStandardMaterial({
-      color: 0xa855f7,
-      metalness: 0.95,
-      roughness: 0.1,
-      emissive: 0x3b0764,
-      emissiveIntensity: 0.5,
-    });
-    this.torusMesh = new THREE.Mesh(torusGeo, torusMat);
-    this.torusMesh.position.set(0.48, 1.05, 0.15);
-    this.sceneGroup.add(this.torusMesh);
+    // Physical High-Performance Workstation Unit resting on desk (Apple Mac Studio style)
+    const studioGroup = new THREE.Group();
+    studioGroup.position.set(0.48, 0.75, 0.05);
+
+    const bodyGeo = new THREE.BoxGeometry(0.20, 0.095, 0.20);
+    const bodyMat = this.materials.getAnodizedAluminum();
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.y = 0.0475;
+    body.castShadow = true;
+    body.receiveShadow = true;
+    studioGroup.add(body);
+
+    // Front status indicator LED
+    const ledGeo = new THREE.SphereGeometry(0.003, 8, 8);
+    const ledMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+    const led = new THREE.Mesh(ledGeo, ledMat);
+    led.position.set(-0.065, 0.03, 0.101);
+    studioGroup.add(led);
+
+    // Front dual Thunderbolt/USB-C ports
+    const portGeo = new THREE.BoxGeometry(0.012, 0.004, 0.002);
+    const portMat = this.materials.getMatteBlackMetal();
+    const p1 = new THREE.Mesh(portGeo, portMat);
+    p1.position.set(-0.015, 0.03, 0.101);
+    studioGroup.add(p1);
+
+    const p2 = new THREE.Mesh(portGeo, portMat);
+    p2.position.set(0.015, 0.03, 0.101);
+    studioGroup.add(p2);
+
+    this.sceneGroup.add(studioGroup);
 
     threeScene.add(this.sceneGroup);
     this.sceneGroup.visible = false;
@@ -194,10 +212,7 @@ export class SceneDigi03Spatial implements CinematicScene {
   public enter(): void { this.sceneGroup.visible = true; }
   public exit(): void { this.sceneGroup.visible = false; }
   public update(sceneProgress: number, globalProgress: number, delta: number): void {
-    if (this.torusMesh) {
-      this.torusMesh.rotation.x += delta * 0.8;
-      this.torusMesh.rotation.y += delta * 0.6;
-    }
+    // Dynamic screen updates
   }
   public cleanup(threeScene: THREE.Scene): void {
     threeScene.remove(this.sceneGroup);

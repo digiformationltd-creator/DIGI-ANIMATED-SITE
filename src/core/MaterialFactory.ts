@@ -149,7 +149,7 @@ export class MaterialFactory {
     return this.cache.get(key) as THREE.MeshStandardMaterial;
   }
 
-  // Screen Surface Material (Emissive Display)
+  // Screen Surface Material (Emissive Anti-Glare Matte Display)
   public createScreenMaterial(texture: THREE.Texture): THREE.MeshStandardMaterial {
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.minFilter = THREE.LinearFilter;
@@ -157,11 +157,11 @@ export class MaterialFactory {
 
     return new THREE.MeshStandardMaterial({
       map: texture,
-      roughness: 0.12,
-      metalness: 0.1,
+      roughness: 0.48, // Anti-glare matte cinema display finish
+      metalness: 0.02,
       emissive: new THREE.Color(0xffffff),
       emissiveMap: texture,
-      emissiveIntensity: 0.75, // Authentic glowing monitor backlight
+      emissiveIntensity: 0.88, // Clean, authentic backlit display
     });
   }
 

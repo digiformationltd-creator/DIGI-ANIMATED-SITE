@@ -70,8 +70,8 @@ export class SceneUS02State implements CinematicScene {
       emissive: 0xffffff,
       emissiveMap: this.canvasTexture,
       emissiveIntensity: 0.9,
-      roughness: 0.15,
-      metalness: 0.1,
+      roughness: 0.52,
+      metalness: 0.0,
     });
     this.monitorMesh = new THREE.Mesh(screenGeo, screenMat);
     this.monitorMesh.position.set(0, 1.05, 0);

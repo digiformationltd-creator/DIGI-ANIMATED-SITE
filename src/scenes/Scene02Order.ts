@@ -79,8 +79,8 @@ export class Scene02Order implements CinematicScene {
       emissive: 0xffffff,
       emissiveMap: this.canvasTexture,
       emissiveIntensity: 0.9,
-      roughness: 0.15,
-      metalness: 0.1,
+      roughness: 0.52,
+      metalness: 0.0,
     });
 
     this.screenMesh = new THREE.Mesh(screenGeo, screenMat);

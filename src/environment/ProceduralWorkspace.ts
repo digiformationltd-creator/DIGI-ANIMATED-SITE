@@ -62,6 +62,42 @@ export class ProceduralWorkspace {
     padMesh.receiveShadow = true;
     deskGroup.add(padMesh);
 
+    // Aluminum Monitor Stand (Weighted base & vertical riser column)
+    const standMat = this.materials.getAnodizedAluminum();
+    const standBaseGeo = new THREE.BoxGeometry(0.26, 0.008, 0.22);
+    const standBase = new THREE.Mesh(standBaseGeo, standMat);
+    standBase.position.set(0, 0.771, -0.08);
+    standBase.castShadow = true;
+    standBase.receiveShadow = true;
+    deskGroup.add(standBase);
+
+    const standRiserGeo = new THREE.BoxGeometry(0.065, 0.34, 0.035);
+    const standRiser = new THREE.Mesh(standRiserGeo, standMat);
+    standRiser.position.set(0, 0.935, -0.10);
+    standRiser.castShadow = true;
+    deskGroup.add(standRiser);
+
+    // Slim Aluminum Wireless Keyboard
+    const kbGeo = new THREE.BoxGeometry(0.36, 0.008, 0.12);
+    const kb = new THREE.Mesh(kbGeo, standMat);
+    kb.position.set(-0.04, 0.773, 0.18);
+    kb.castShadow = true;
+    kb.receiveShadow = true;
+    deskGroup.add(kb);
+
+    // Precision Glass Magic Trackpad
+    const tpGeo = new THREE.BoxGeometry(0.12, 0.006, 0.11);
+    const tpMat = new THREE.MeshStandardMaterial({
+      color: 0xf1f5f9,
+      roughness: 0.15,
+      metalness: 0.3,
+    });
+    const tp = new THREE.Mesh(tpGeo, tpMat);
+    tp.position.set(0.24, 0.772, 0.18);
+    tp.castShadow = true;
+    tp.receiveShadow = true;
+    deskGroup.add(tp);
+
     this.group.add(deskGroup);
 
     // 3. Architectural Penthouse Window & London Twilight Backdrop

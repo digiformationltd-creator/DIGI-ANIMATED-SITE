@@ -7,6 +7,7 @@ import { PerformanceMonitor } from "../core/PerformanceMonitor";
 import { CinematicScene, QualityTier } from "../types/cinema";
 import { FilmConfig } from "../types/film";
 import { AudioAtmosphereEngine } from "../core/AudioAtmosphereEngine";
+import { ProceduralWorkspace } from "../environment/ProceduralWorkspace";
 
 interface CinemaViewportProps {
   progress: number;
@@ -28,7 +29,9 @@ export const CinemaViewport: React.FC<CinemaViewportProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
   const sceneManagerRef = useRef<CinematicSceneManager | null>(null);
+  const persistentWorkspaceRef = useRef<ProceduralWorkspace | null>(null);
   const lightingRigRef = useRef<LightingRig | null>(null);
   const cameraControllerRef = useRef<CinematicCameraController | null>(null);
   const smoothProgressRef = useRef<number>(smoothProgress);
@@ -48,7 +51,16 @@ export const CinemaViewport: React.FC<CinemaViewportProps> = ({
 
     // 1. Initialize Scene & Perspective Camera
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x07090c); // Deep near-black obsidian background
+    sceneRef.current = scene;
+    scene.background = new THREE.Color(
+      filmRef.current.id === "master" ? 0x60a5fa : 0x080d1a
+    );
+
+    // Persistent Executive Workspace (Grounding all service films in executive suite)
+    const persistentWorkspace = new ProceduralWorkspace();
+    scene.add(persistentWorkspace.getGroup());
+    persistentWorkspace.getGroup().visible = filmRef.current.id !== "master";
+    persistentWorkspaceRef.current = persistentWorkspace;
 
     const camera = new THREE.PerspectiveCamera(
       46,
@@ -164,6 +176,9 @@ export const CinemaViewport: React.FC<CinemaViewportProps> = ({
       window.removeEventListener("resize", handleResize);
       sceneManager.dispose();
       lightingRig.dispose(scene);
+      if (persistentWorkspaceRef.current) {
+        scene.remove(persistentWorkspaceRef.current.getGroup());
+      }
       renderer.dispose();
       if (container && renderer.domElement) {
         container.removeChild(renderer.domElement);
@@ -180,6 +195,15 @@ export const CinemaViewport: React.FC<CinemaViewportProps> = ({
     }
     const sceneManager = sceneManagerRef.current;
     if (!sceneManager) return;
+
+    if (persistentWorkspaceRef.current) {
+      persistentWorkspaceRef.current.getGroup().visible = film.id !== "master";
+    }
+    if (sceneRef.current) {
+      sceneRef.current.background = film.id === "master"
+        ? new THREE.Color(0x60a5fa)
+        : new THREE.Color(0x080d1a);
+    }
 
     sceneManager.clearScenes();
     const newScenes = film.createScenes();

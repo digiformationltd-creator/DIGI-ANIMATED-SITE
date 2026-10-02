@@ -38,9 +38,9 @@ export class LightingRig {
     this.rimLight.position.set(10, 20, -25);
     scene.add(this.rimLight);
 
-    // 5. Emissive monitor bounce light
-    this.screenBounceLight = new THREE.PointLight(0xdce7f5, 1.2, 3.0, 2.0);
-    this.screenBounceLight.position.set(0, 0.78, 0.5);
+    // 5. Emissive monitor bounce light (Soft diffuse fill without harsh specular hotspot)
+    this.screenBounceLight = new THREE.PointLight(0xdce7f5, 0.15, 2.5, 2.0);
+    this.screenBounceLight.position.set(0, 0.95, 0.6);
     scene.add(this.screenBounceLight);
   }
 
@@ -55,9 +55,9 @@ export class LightingRig {
     this.fillLight.intensity = 0.9;
     this.rimLight.intensity = 1.6;
 
-    // Screen emissive bounce intensifies as camera approaches display
+    // Screen emissive bounce is subtle and diffuse without harsh blinding specular
     const screenFocus = Math.min(1, Math.max(0, (progress - 0.2) / 0.8));
-    this.screenBounceLight.intensity = 0.3 + screenFocus * 2.2;
+    this.screenBounceLight.intensity = 0.08 + screenFocus * 0.22;
   }
 
   public setQuality(quality: "HIGH" | "MEDIUM" | "LOW"): void {

@@ -22,6 +22,7 @@ export class CorporateHeadquarters {
   private monumentLogo: SilverLogoSignage | null = null;
   private crownLogo: SilverLogoSignage | null = null;
   private windowGlassMesh: THREE.Mesh | null = null;
+  private skyTexture: THREE.CanvasTexture | null = null;
 
   constructor() {
     this.buildCampus();
@@ -74,12 +75,13 @@ export class CorporateHeadquarters {
       });
     }
 
-    const skyTexture = new THREE.CanvasTexture(skyCanvas);
-    skyTexture.colorSpace = THREE.SRGBColorSpace;
-    this.canvasTextures.push(skyTexture);
+    this.skyTexture = new THREE.CanvasTexture(skyCanvas);
+    this.skyTexture.colorSpace = THREE.SRGBColorSpace;
+    this.skyTexture.mapping = THREE.EquirectangularReflectionMapping;
+    this.canvasTextures.push(this.skyTexture);
 
     const skyMat = new THREE.MeshBasicMaterial({
-      map: skyTexture,
+      map: this.skyTexture,
       side: THREE.BackSide,
       depthWrite: false,
     });
@@ -247,12 +249,18 @@ export class CorporateHeadquarters {
       metalness: 0.15,
     });
 
-    // Deep blue reflective solar glass material
+    // Deep blue reflective solar glass material reflecting sky
     const solarGlassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x1e40af, // Deep vibrant architectural blue
+      color: 0x1e3a8a, // Rich architectural deep sky blue
+      envMap: this.skyTexture,
       roughness: 0.04,
-      metalness: 0.88,
-      transmission: 0.6,
+      metalness: 0.35,
+      transmission: 0.35,
+      transparent: true,
+      opacity: 0.88,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.05,
+      reflectivity: 0.95,
       ior: 1.52,
     });
 
@@ -297,12 +305,18 @@ export class CorporateHeadquarters {
     const startAngle = Math.PI - 0.55;
     const arc = 0.95;
 
-    // High-performance reflective curtain glass
+    // High-performance reflective curtain glass with sky reflection
     const curtainGlassMat = new THREE.MeshPhysicalMaterial({
       color: 0x2563eb, // High-performance sky-reflective blue
+      envMap: this.skyTexture,
       roughness: 0.03,
-      metalness: 0.92,
-      transmission: 0.5,
+      metalness: 0.4,
+      transmission: 0.35,
+      transparent: true,
+      opacity: 0.9,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.04,
+      reflectivity: 0.95,
       ior: 1.55,
     });
 
@@ -333,9 +347,15 @@ export class CorporateHeadquarters {
     });
     const ribbonGlassMat = new THREE.MeshPhysicalMaterial({
       color: 0x1d4ed8,
-      roughness: 0.05,
-      metalness: 0.85,
-      transmission: 0.65,
+      envMap: this.skyTexture,
+      roughness: 0.04,
+      metalness: 0.35,
+      transmission: 0.4,
+      transparent: true,
+      opacity: 0.88,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.05,
+      reflectivity: 0.95,
     });
 
     const floors = 7;
@@ -390,11 +410,14 @@ export class CorporateHeadquarters {
     const doorGeo = new THREE.BoxGeometry(2.4, 4.2, 0.08);
     const doorMat = new THREE.MeshPhysicalMaterial({
       color: 0x93c5fd,
+      envMap: this.skyTexture,
       transparent: true,
-      opacity: 0.35,
-      roughness: 0.05,
-      metalness: 0.85,
-      transmission: 0.85,
+      opacity: 0.45,
+      roughness: 0.03,
+      metalness: 0.4,
+      transmission: 0.75,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.05,
     });
     const lDoor = new THREE.Mesh(doorGeo, doorMat);
     lDoor.position.set(-3.2, 2.1, 1.05);
@@ -408,16 +431,63 @@ export class CorporateHeadquarters {
     const winGeo = new THREE.PlaneGeometry(8.5, 4.2);
     const winMat = new THREE.MeshPhysicalMaterial({
       color: 0x93c5fd,
+      envMap: this.skyTexture,
       transparent: true,
       opacity: 0.85,
-      roughness: 0.04,
-      metalness: 0.88,
-      transmission: 0.75,
+      roughness: 0.03,
+      metalness: 0.4,
+      transmission: 0.65,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.04,
       ior: 1.5,
     });
     this.windowGlassMesh = new THREE.Mesh(winGeo, winMat);
     this.windowGlassMesh.position.set(0, 2.1, 1.02);
     atriumGroup.add(this.windowGlassMesh);
+
+    // ==========================================
+    // INTERIOR ATRIUM LOBBY ARCHITECTURE (DEPTH)
+    // ==========================================
+    // Polished Slate Lobby Floor
+    const lobbyFloorGeo = new THREE.PlaneGeometry(12, 6);
+    const lobbyFloorMat = new THREE.MeshStandardMaterial({
+      color: 0x0f172a,
+      roughness: 0.28,
+      metalness: 0.2,
+    });
+    const lobbyFloor = new THREE.Mesh(lobbyFloorGeo, lobbyFloorMat);
+    lobbyFloor.rotation.x = -Math.PI / 2;
+    lobbyFloor.position.set(0, 0.02, -1.8);
+    atriumGroup.add(lobbyFloor);
+
+    // Architectural Executive Reception Desk
+    const recDeskGeo = new THREE.BoxGeometry(3.6, 1.08, 0.85);
+    const recDesk = new THREE.Mesh(recDeskGeo, this.materials.getDarkWalnutWood());
+    recDesk.position.set(0, 0.54, -1.8);
+    atriumGroup.add(recDesk);
+
+    // Brushed Silver Desk Plinth Accent
+    const plinthAccent = new THREE.Mesh(
+      new THREE.BoxGeometry(3.64, 0.06, 0.89),
+      this.materials.getPolishedChrome()
+    );
+    plinthAccent.position.set(0, 1.06, -1.8);
+    atriumGroup.add(plinthAccent);
+
+    // Warm Interior Hospitality Downlight
+    const lobbyLight = new THREE.PointLight(0xffedd5, 2.8, 9, 1.5);
+    lobbyLight.position.set(0, 3.2, -1.4);
+    atriumGroup.add(lobbyLight);
+
+    // Acoustic Lobby Rear Wall
+    const lobbyWallGeo = new THREE.PlaneGeometry(14, 5);
+    const lobbyWallMat = new THREE.MeshStandardMaterial({
+      color: 0x090e17,
+      roughness: 0.8,
+    });
+    const lobbyWall = new THREE.Mesh(lobbyWallGeo, lobbyWallMat);
+    lobbyWall.position.set(0, 2.2, -4.0);
+    atriumGroup.add(lobbyWall);
 
     this.group.add(atriumGroup);
   }
@@ -448,77 +518,140 @@ export class CorporateHeadquarters {
     this.group.add(crownGroup);
   }
 
-  // Create Left Foreground Mature Shade Tree
+  // Create Left Foreground Mature Shade Tree with Organic Multi-Tiered Foliage
   private createMatureTree(x: number, z: number): void {
     const tree = new THREE.Group();
     tree.position.set(x, 0, z);
 
-    // Natural curved trunk
-    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x473427, roughness: 0.95 });
-    const trunkGeo = new THREE.CylinderGeometry(0.35, 0.65, 5.5, 12);
+    // Natural tapered curved trunk
+    const trunkMat = new THREE.MeshStandardMaterial({
+      color: 0x3d2817,
+      roughness: 0.95,
+      metalness: 0.05,
+    });
+    const trunkGeo = new THREE.CylinderGeometry(0.38, 0.72, 5.6, 16);
     const trunk = new THREE.Mesh(trunkGeo, trunkMat);
-    trunk.position.set(0, 2.75, 0);
-    trunk.rotation.z = -0.08;
+    trunk.position.set(0, 2.8, 0);
+    trunk.rotation.z = -0.06;
     trunk.castShadow = true;
     tree.add(trunk);
 
-    // Leafy green canopy clusters
-    const leafMat = new THREE.MeshStandardMaterial({
-      color: 0x2e7d32, // Natural lush green foliage
-      roughness: 0.75,
+    // Primary spreading boughs
+    const branchGeo = new THREE.CylinderGeometry(0.16, 0.28, 2.6, 12);
+    const b1 = new THREE.Mesh(branchGeo, trunkMat);
+    b1.position.set(-0.6, 4.2, 0.3);
+    b1.rotation.z = 0.55;
+    b1.rotation.y = 0.2;
+    tree.add(b1);
+
+    const b2 = new THREE.Mesh(branchGeo, trunkMat);
+    b2.position.set(0.7, 4.4, -0.4);
+    b2.rotation.z = -0.48;
+    b2.rotation.y = -0.3;
+    tree.add(b2);
+
+    // Realistic organic canopy foliage layers (Deep shadow, natural mid, sunlit highlights)
+    const deepLeafMat = new THREE.MeshStandardMaterial({
+      color: 0x143d19,
+      roughness: 0.85,
+      metalness: 0.04,
+    });
+    const midLeafMat = new THREE.MeshStandardMaterial({
+      color: 0x236b2b,
+      roughness: 0.78,
+      metalness: 0.04,
+    });
+    const sunLeafMat = new THREE.MeshStandardMaterial({
+      color: 0x3b8c44,
+      roughness: 0.7,
       metalness: 0.05,
     });
 
-    const leafOffsets = [
-      [0, 5.5, 0, 2.6],
-      [-1.2, 6.2, 0.8, 2.2],
-      [1.4, 5.8, -0.6, 2.4],
-      [0.6, 7.2, 0.4, 1.9],
-      [-1.6, 4.8, -0.8, 1.8],
-    ];
+    const leafClusters = [
+      // [x, y, z, rx, ry, rz, material]
+      [0, 5.8, 0, 2.8, 2.1, 2.8, midLeafMat],
+      [-1.4, 6.4, 0.6, 2.2, 1.8, 2.1, sunLeafMat],
+      [1.5, 6.0, -0.5, 2.4, 1.9, 2.3, midLeafMat],
+      [0.4, 7.5, 0.2, 2.0, 1.7, 2.0, sunLeafMat],
+      [-1.6, 5.0, -0.7, 1.9, 1.6, 1.9, deepLeafMat],
+      [0.9, 5.2, 1.0, 2.1, 1.7, 2.0, deepLeafMat],
+      [-0.5, 7.2, -0.8, 1.8, 1.5, 1.8, sunLeafMat],
+      [1.8, 5.6, 0.7, 1.7, 1.4, 1.7, midLeafMat],
+    ] as const;
 
-    leafOffsets.forEach(([lx, ly, lz, r]) => {
-      const foliageGeo = new THREE.DodecahedronGeometry(r, 1);
-      const foliage = new THREE.Mesh(foliageGeo, leafMat);
+    leafClusters.forEach(([lx, ly, lz, rx, ry, rz, mat]) => {
+      const geo = new THREE.SphereGeometry(1.0, 16, 12);
+      const foliage = new THREE.Mesh(geo, mat);
+      foliage.scale.set(rx, ry, rz);
       foliage.position.set(lx, ly, lz);
+      foliage.rotation.y = Math.random() * Math.PI;
       foliage.castShadow = true;
+      foliage.receiveShadow = true;
       tree.add(foliage);
     });
 
     this.group.add(tree);
   }
 
-  // Landscaped saplings with diagonal support stakes (matching photo)
+  // Landscaped saplings with organic foliage and bamboo support stakes (matching photo)
   private createSaplingWithStakes(x: number, z: number): void {
     const sapling = new THREE.Group();
     sapling.position.set(x, 0, z);
 
-    // Slender trunk
-    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x5c4033, roughness: 0.9 });
-    const trunkGeo = new THREE.CylinderGeometry(0.08, 0.12, 3.8, 8);
+    // Slender young birch/linden trunk
+    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x544133, roughness: 0.9 });
+    const trunkGeo = new THREE.CylinderGeometry(0.06, 0.1, 3.8, 10);
     const trunk = new THREE.Mesh(trunkGeo, trunkMat);
     trunk.position.set(0, 1.9, 0);
+    trunk.castShadow = true;
     sapling.add(trunk);
 
     // Diagonal bamboo stakes
-    const stakeMat = new THREE.MeshStandardMaterial({ color: 0x9ca3af, roughness: 0.7 });
+    const stakeMat = new THREE.MeshStandardMaterial({ color: 0x9ca3af, roughness: 0.65 });
     for (let i = 0; i < 3; i++) {
       const angle = (Math.PI * 2 / 3) * i;
-      const stakeGeo = new THREE.CylinderGeometry(0.03, 0.03, 2.2, 6);
+      const stakeGeo = new THREE.CylinderGeometry(0.025, 0.025, 2.4, 8);
       const stake = new THREE.Mesh(stakeGeo, stakeMat);
-      stake.position.set(Math.cos(angle) * 0.45, 1.0, Math.sin(angle) * 0.45);
+      stake.position.set(Math.cos(angle) * 0.45, 1.1, Math.sin(angle) * 0.45);
       stake.rotation.z = Math.cos(angle) * 0.28;
       stake.rotation.x = Math.sin(angle) * 0.28;
       sapling.add(stake);
     }
 
-    // Foliage
-    const leafMat = new THREE.MeshStandardMaterial({ color: 0x4ade80, roughness: 0.8 });
-    const foliageGeo = new THREE.DodecahedronGeometry(1.2, 1);
-    const foliage = new THREE.Mesh(foliageGeo, leafMat);
-    foliage.position.set(0, 3.6, 0);
-    foliage.castShadow = true;
-    sapling.add(foliage);
+    // Bamboo cross-tie ring
+    const ringGeo = new THREE.TorusGeometry(0.42, 0.015, 6, 16);
+    const ring = new THREE.Mesh(ringGeo, stakeMat);
+    ring.rotation.x = Math.PI / 2;
+    ring.position.set(0, 1.8, 0);
+    sapling.add(ring);
+
+    // Multi-tiered organic young foliage puffs
+    const saplingLeafMat = new THREE.MeshStandardMaterial({
+      color: 0x2e8540,
+      roughness: 0.75,
+      metalness: 0.03,
+    });
+    const saplingHighlightMat = new THREE.MeshStandardMaterial({
+      color: 0x48a85a,
+      roughness: 0.7,
+      metalness: 0.04,
+    });
+
+    const puffs = [
+      [0, 3.6, 0, 1.15, 0.95, 1.1, saplingLeafMat],
+      [-0.3, 4.2, 0.2, 0.9, 0.8, 0.85, saplingHighlightMat],
+      [0.35, 3.9, -0.2, 0.85, 0.75, 0.85, saplingLeafMat],
+    ] as const;
+
+    puffs.forEach(([px, py, pz, sx, sy, sz, pMat]) => {
+      const pGeo = new THREE.SphereGeometry(1.0, 14, 10);
+      const puff = new THREE.Mesh(pGeo, pMat);
+      puff.scale.set(sx, sy, sz);
+      puff.position.set(px, py, pz);
+      puff.castShadow = true;
+      puff.receiveShadow = true;
+      sapling.add(puff);
+    });
 
     this.group.add(sapling);
   }

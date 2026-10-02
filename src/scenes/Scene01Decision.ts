@@ -57,11 +57,7 @@ export class Scene01Decision implements CinematicScene {
   private notebookGroup: THREE.Group | null = null;
 
   public setup(threeScene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
-    // 1. Executive Workspace (Floor, Cantilever Desk, London Twilight Windows)
-    this.workspace = new ProceduralWorkspace();
-    this.sceneGroup.add(this.workspace.getGroup());
-
-    // 2. Screen Surface with 3-phase dynamic rendering (Research -> Discovery -> Selection)
+    // 1. Screen Surface with 3-phase dynamic rendering (Research -> Discovery -> Selection)
     this.screenSurface = new ScreenSurface({
       width: 0.38,
       height: 0.238,

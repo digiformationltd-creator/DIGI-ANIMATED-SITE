@@ -75,19 +75,15 @@ export class SceneUS01Idea implements CinematicScene {
   }
 
   public setup(threeScene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
-    // 1. Executive Workspace Architecture
-    this.workspace = new ProceduralWorkspace();
-    this.sceneGroup.add(this.workspace.getGroup());
-
-    // 2. Large 32" 4K Curved Display on Desk
+    // 1. Large 32" 4K Curved Display on Desk
     const screenGeo = new THREE.PlaneGeometry(1.2, 0.75);
     const screenMat = new THREE.MeshStandardMaterial({
       map: this.canvasTexture,
       emissive: 0xffffff,
       emissiveMap: this.canvasTexture,
       emissiveIntensity: 0.9,
-      roughness: 0.15,
-      metalness: 0.1,
+      roughness: 0.52,
+      metalness: 0.0,
     });
     this.monitorMesh = new THREE.Mesh(screenGeo, screenMat);
     this.monitorMesh.position.set(0, 1.05, 0);

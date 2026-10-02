@@ -2,25 +2,25 @@ import * as THREE from "three";
 import { CinematicScene, TelemetryData, SceneTransition } from "../../types/cinema";
 import { CinematicCameraController } from "../../core/CinematicCameraController";
 import { MaterialFactory } from "../../core/MaterialFactory";
-import { CinematicEarthOrbit } from "../../environment/CinematicEarthOrbit";
 import { CorporateHeadquarters } from "../../environment/CorporateHeadquarters";
 import { OfficeInterior } from "../../environment/OfficeInterior";
 
 /**
  * SceneMasterPortals
  * High-End Cinematic Opening Sequence for DigiFormation:
- * EARTH → HIGH ALTITUDE → FAST DESCENT → LOCATION LOCK → CORPORATE HEADQUARTERS →
- * EXTERIOR SILVER LOGO → BUILDING FACADE → WINDOW SELECTION → WINDOW ENTRY →
+ * CORPORATE HEADQUARTERS CAMPUS (Google-Style Daylight Architecture) →
+ * EXTERIOR MACHINED SILVER STEEL LOGO (Granite Entrance Monument) →
+ * BUILDING FACADE & EXECUTIVE WINDOW → WINDOW PASS-THROUGH →
  * REAL DIGIFORMATION OFFICE → INTERIOR SILVER LOGO → MALE CORPORATE OFFICER → 5 ENTERPRISE PATHWAYS.
  */
 export class SceneMasterPortals implements CinematicScene {
   public id = "scene-master-portals";
   public title = "DigiFormation Limited";
   public label = "00 MASTER";
-  public kicker = "00 · PLANETARY APEX";
-  public description = "High-altitude orbital view establishing international corporate formation infrastructure across sovereign jurisdictions.";
-  public statutoryNote = "Orbital Apex · 35,786 KM · High Altitude Global Network";
-  public metricBadge = "PLANETARY ESTABLISHING";
+  public kicker = "00 · CORPORATE HEADQUARTERS";
+  public description = "Monumental curved glass corporate campus with reflecting waters, architectural concrete grid, and landscaped stone courtyard.";
+  public statutoryNote = "Global Headquarters · Sovereign Digital Campus · London";
+  public metricBadge = "CAMPUS GROUNDS";
   public startProgress = 0.0;
   public endProgress = 1.0;
 
@@ -32,22 +32,22 @@ export class SceneMasterPortals implements CinematicScene {
   public telemetry: TelemetryData = {
     reelId: "REEL-MASTER-PORTAL",
     reelNumber: "MASTER",
-    chapterTitle: "GLOBAL ORBIT",
+    chapterTitle: "CORPORATE CAMPUS",
     shutterSpeed: "1/48s",
     aperture: "T1.4",
-    focalLength: "18mm Cosmic Ultra-Wide",
+    focalLength: "35mm Prime",
     iso: 320,
     timecode: "00:00:00:00",
     fps: 24,
     aspectRatio: "2.39:1 Anamorphic",
-    statutoryStep: "EARTH APEX",
+    statutoryStep: "CAMPUS ARRIVAL",
   };
 
   public cameraWaypoints = {
     start: {
-      position: [0.0, 32.0, 85.0] as [number, number, number],
-      target: [0.0, -10.0, -15.0] as [number, number, number],
-      fov: 50,
+      position: [-3.2, 4.6, 36.5] as [number, number, number],
+      target: [1.0, 8.2, 4.0] as [number, number, number],
+      fov: 42,
     },
     end: {
       position: [0.0, 1.45, 0.28] as [number, number, number],
@@ -57,7 +57,6 @@ export class SceneMasterPortals implements CinematicScene {
   };
 
   private sceneGroup: THREE.Group = new THREE.Group();
-  private earthOrbit: CinematicEarthOrbit;
   private headquarters: CorporateHeadquarters;
   private officeInterior: OfficeInterior;
   private portalsGroup: THREE.Group = new THREE.Group();
@@ -67,7 +66,6 @@ export class SceneMasterPortals implements CinematicScene {
   private threeScene: THREE.Scene | null = null;
 
   constructor() {
-    this.earthOrbit = new CinematicEarthOrbit();
     this.headquarters = new CorporateHeadquarters();
     this.officeInterior = new OfficeInterior();
   }
@@ -75,13 +73,10 @@ export class SceneMasterPortals implements CinematicScene {
   public setup(threeScene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
     this.threeScene = threeScene;
 
-    // 1. Add High-Altitude Cinematic Earth Orbit & Space
-    this.sceneGroup.add(this.earthOrbit.getGroup());
-
-    // 2. Add Photorealistic Corporate Headquarters Building & Campus
+    // 1. Add Photorealistic Corporate Headquarters Building & Campus
     this.sceneGroup.add(this.headquarters.getGroup());
 
-    // 3. Add Real DigiFormation Office Suite & Male Officer
+    // 2. Add Real DigiFormation Office Suite & Male Officer
     this.sceneGroup.add(this.officeInterior.getGroup());
 
     // 4. Add Screen-Safe Interactive Enterprise Process Portals
@@ -283,7 +278,7 @@ export class SceneMasterPortals implements CinematicScene {
     });
   }
 
-  // Camera Trajectory: Earth -> Space Dive -> Location -> Campus -> Exterior Logo -> Window -> Office -> Male Officer
+  // Camera Trajectory: Corporate Campus -> Exterior Silver Logo -> Window Selection -> Window Pass-Through -> Real Office -> Male Officer
   public updateCamera(cameraController: CinematicCameraController, progress: number): void {
     const p = Math.max(0, Math.min(1, progress));
 
@@ -291,105 +286,57 @@ export class SceneMasterPortals implements CinematicScene {
     let camTarget: [number, number, number];
     let fov: number;
 
-    if (p < 0.10) {
-      // Stage 1: Earth High-Altitude Orbit in Deep Space
-      const t = p / 0.10;
+    if (p < 0.22) {
+      // Stage 1: Establishing Shot of Corporate Campus Grounds (Matching campus-reference.jpg)
+      const t = p / 0.22;
       const ease = t * t * (3 - 2 * t);
 
       camPos = [
-        0.0,
-        THREE.MathUtils.lerp(32.0, 26.0, ease),
-        THREE.MathUtils.lerp(85.0, 68.0, ease),
+        THREE.MathUtils.lerp(-3.2, -1.8, ease),
+        THREE.MathUtils.lerp(4.6, 3.2, ease),
+        THREE.MathUtils.lerp(36.5, 28.5, ease),
       ];
       camTarget = [
-        0.0,
-        THREE.MathUtils.lerp(-10.0, -8.0, ease),
-        THREE.MathUtils.lerp(-15.0, -10.0, ease),
-      ];
-      fov = THREE.MathUtils.lerp(50, 46, ease);
-    } else if (p < 0.25) {
-      // Stage 2: Fast Kinetic Stratospheric Descent
-      const t = (p - 0.10) / 0.15;
-      const ease = t * t * (3 - 2 * t);
-
-      camPos = [
-        0.0,
-        THREE.MathUtils.lerp(26.0, 16.0, ease),
-        THREE.MathUtils.lerp(68.0, 36.0, ease),
-      ];
-      camTarget = [
-        0.0,
-        THREE.MathUtils.lerp(-8.0, 8.0, ease),
-        THREE.MathUtils.lerp(-10.0, 10.0, ease),
-      ];
-      fov = THREE.MathUtils.lerp(46, 40, ease);
-    } else if (p < 0.35) {
-      // Stage 3: Regional London Spatial Lock & 3D Scan
-      const t = (p - 0.25) / 0.10;
-      const ease = t * t * (3 - 2 * t);
-
-      camPos = [
-        THREE.MathUtils.lerp(0.0, -4.0, ease),
-        THREE.MathUtils.lerp(16.0, 7.5, ease),
-        THREE.MathUtils.lerp(36.0, 28.0, ease),
-      ];
-      camTarget = [
-        THREE.MathUtils.lerp(0.0, -1.0, ease),
-        THREE.MathUtils.lerp(8.0, 5.0, ease),
-        THREE.MathUtils.lerp(10.0, 8.0, ease),
-      ];
-      fov = THREE.MathUtils.lerp(40, 38, ease);
-    } else if (p < 0.48) {
-      // Stage 4: Corporate Campus Grounds Arrival (Matching campus-reference.jpg composition)
-      const t = (p - 0.35) / 0.13;
-      const ease = t * t * (3 - 2 * t);
-
-      camPos = [
-        THREE.MathUtils.lerp(-3.0, -1.8, ease),
-        THREE.MathUtils.lerp(4.5, 3.2, ease),
-        THREE.MathUtils.lerp(36.0, 29.0, ease),
-      ];
-      camTarget = [
-        THREE.MathUtils.lerp(1.0, 1.0, ease),
-        THREE.MathUtils.lerp(8.0, 7.5, ease),
-        THREE.MathUtils.lerp(4.0, 4.0, ease),
+        1.0,
+        THREE.MathUtils.lerp(8.2, 7.2, ease),
+        4.0,
       ];
       fov = THREE.MathUtils.lerp(42, 38, ease);
-    } else if (p < 0.60) {
-      // Stage 5: Exterior Silver Logo Focus Pull (Directly framing machined silver logo on granite monument)
-      const t = (p - 0.48) / 0.12;
+    } else if (p < 0.45) {
+      // Stage 2: Exterior Silver Logo Focus Pull (Directly framing machined silver logo on granite monument)
+      const t = (p - 0.22) / 0.23;
       const ease = t * t * (3 - 2 * t);
 
       camPos = [
         THREE.MathUtils.lerp(-1.8, 1.05, ease),
         THREE.MathUtils.lerp(3.2, 1.25, ease),
-        THREE.MathUtils.lerp(29.0, 21.5, ease),
+        THREE.MathUtils.lerp(28.5, 21.2, ease),
       ];
       camTarget = [
         THREE.MathUtils.lerp(1.0, 1.05, ease),
-        THREE.MathUtils.lerp(7.5, 1.25, ease),
+        THREE.MathUtils.lerp(7.2, 1.25, ease),
         THREE.MathUtils.lerp(4.0, 18.45, ease),
       ];
       fov = THREE.MathUtils.lerp(38, 32, ease);
-    } else if (p < 0.72) {
-      // Stage 6: Facade Tracking & Executive Window Selection
-      const t = (p - 0.60) / 0.12;
+    } else if (p < 0.65) {
+      // Stage 3: Facade Tracking & Executive Window Selection
+      const t = (p - 0.45) / 0.20;
       const ease = t * t * (3 - 2 * t);
 
       camPos = [
         THREE.MathUtils.lerp(1.05, 0.0, ease),
         THREE.MathUtils.lerp(1.25, 2.4, ease),
-        THREE.MathUtils.lerp(21.5, 5.5, ease),
+        THREE.MathUtils.lerp(21.2, 5.5, ease),
       ];
       camTarget = [
         THREE.MathUtils.lerp(1.05, 0.0, ease),
         THREE.MathUtils.lerp(1.25, 2.1, ease),
         THREE.MathUtils.lerp(18.45, 1.02, ease),
       ];
-      fov = THREE.MathUtils.lerp(32, 36, ease);
-    } else if (p < 0.84) {
-      // Stage 7: Continuous Optical Window Pass-Through (VFX Crossing Glass into Interior)
-      const t = (p - 0.72) / 0.12;
+      fov = THREE.MathUtils.lerp(32, 35, ease);
+    } else if (p < 0.80) {
+      // Stage 4: Continuous Optical Window Pass-Through (VFX Crossing Glass into Interior)
+      const t = (p - 0.65) / 0.15;
       const ease = t * t * (3 - 2 * t);
 
       camPos = [
@@ -403,9 +350,9 @@ export class SceneMasterPortals implements CinematicScene {
         THREE.MathUtils.lerp(1.02, -1.2, ease),
       ];
       fov = 35;
-    } else if (p < 0.94) {
-      // Stage 8: Real DigiFormation Office Reveal & Feature Wall Interior Logo
-      const t = (p - 0.84) / 0.10;
+    } else if (p < 0.92) {
+      // Stage 5: Real DigiFormation Office Reveal & Feature Wall Interior Logo
+      const t = (p - 0.80) / 0.12;
       const ease = t * t * (3 - 2 * t);
 
       camPos = [
@@ -420,8 +367,8 @@ export class SceneMasterPortals implements CinematicScene {
       ];
       fov = 35;
     } else {
-      // Stage 9: First Human Workflow (Director Haroon) & 5 Enterprise Pathways
-      const t = (p - 0.94) / 0.06;
+      // Stage 6: First Human Workflow (Director Haroon) & 5 Enterprise Pathways
+      const t = (p - 0.92) / 0.08;
       const ease = t * t * (3 - 2 * t);
 
       camPos = [
@@ -449,17 +396,12 @@ export class SceneMasterPortals implements CinematicScene {
 
     // Update dynamic background tone depending on altitude and environment
     if (this.threeScene) {
-      if (sceneProgress < 0.25) {
-        this.threeScene.background = new THREE.Color(0x020408);
-      } else if (sceneProgress < 0.72) {
+      if (sceneProgress < 0.70) {
         this.threeScene.background = new THREE.Color(0x60a5fa); // Bright daylight sky blue matching campus photo
       } else {
-        this.threeScene.background = new THREE.Color(0x0b1120);
+        this.threeScene.background = new THREE.Color(0x0b1120); // Executive office interior
       }
     }
-
-    // Update Earth Atmosphere and Planetary Drift
-    this.earthOrbit.update(sceneProgress, delta);
 
     // Update Campus & Building Lights / Window Opacity
     this.headquarters.update(sceneProgress, delta);
@@ -467,67 +409,30 @@ export class SceneMasterPortals implements CinematicScene {
     // Update Office Interior (Director posture, interior silver logo)
     this.officeInterior.update(time);
 
-    // Layer Visibility Management across the 9 continuous cinematic stages
-    if (sceneProgress < 0.25) {
-      this.earthOrbit.getGroup().visible = true;
-      this.headquarters.getGroup().visible = false;
+    // Layer Visibility Management: Headquarters is visible from 0.00!
+    this.headquarters.getGroup().visible = true;
+    if (sceneProgress < 0.65) {
       this.officeInterior.getGroup().visible = false;
       this.portalsGroup.visible = false;
-    } else if (sceneProgress < 0.35) {
-      this.earthOrbit.getGroup().visible = true;
-      this.headquarters.getGroup().visible = true;
-      this.officeInterior.getGroup().visible = false;
-      this.portalsGroup.visible = false;
-    } else if (sceneProgress < 0.72) {
-      this.earthOrbit.getGroup().visible = false;
-      this.headquarters.getGroup().visible = true;
-      this.officeInterior.getGroup().visible = false;
+    } else if (sceneProgress < 0.88) {
+      this.officeInterior.getGroup().visible = true;
       this.portalsGroup.visible = false;
     } else {
-      this.earthOrbit.getGroup().visible = false;
-      this.headquarters.getGroup().visible = true;
       this.officeInterior.getGroup().visible = true;
       this.portalsGroup.visible = true;
     }
 
-    // Dynamic HUD Telemetry & Narrative Synchronization
-    if (sceneProgress < 0.10) {
-      this.kicker = "00 · PLANETARY APEX";
-      this.title = "DigiFormation Global Orbit";
-      this.description = "High-altitude orbital view establishing international corporate formation infrastructure across sovereign jurisdictions.";
-      this.statutoryNote = "Orbital Apex · 35,786 KM · High Altitude Global Network";
-      this.metricBadge = "PLANETARY ESTABLISHING";
-      this.telemetry.statutoryStep = "EARTH APEX";
-      this.telemetry.chapterTitle = "GLOBAL ORBIT";
-      this.telemetry.focalLength = "18mm Cosmic Ultra-Wide";
-    } else if (sceneProgress < 0.25) {
-      this.kicker = "00 · STRATOSPHERIC DESCENT";
-      this.title = "Hypersonic Flight Vector";
-      this.description = "Accelerated kinetic descent traversing upper atmospheric cloud layers toward the United Kingdom commercial jurisdiction.";
-      this.statutoryNote = "Atmospheric Penetration · Mach 18 · UK Vector Locked";
-      this.metricBadge = "RAPID DESCENT";
-      this.telemetry.statutoryStep = "ATMOSPHERE DIVE";
-      this.telemetry.chapterTitle = "STRATOSPHERIC ENTRY";
-      this.telemetry.focalLength = "24mm Anamorphic";
-    } else if (sceneProgress < 0.35) {
-      this.kicker = "00 · REGIONAL LOCATION LOCK";
-      this.title = "London Jurisdiction Acquired";
-      this.description = "3D spatial coordinate verification complete: 51.5074° N, 0.1278° W. Identifying corporate campus boundaries.";
-      this.statutoryNote = "Coordinates: 51.5074° N, 0.1278° W · London Headquarters";
-      this.metricBadge = "SPATIAL SCAN ACTIVE";
-      this.telemetry.statutoryStep = "LOCATION ACQUIRED";
-      this.telemetry.chapterTitle = "REGIONAL SCAN";
-      this.telemetry.focalLength = "28mm Anamorphic";
-    } else if (sceneProgress < 0.48) {
-      this.kicker = "00 · CORPORATE CAMPUS";
-      this.title = "DigiFormation Headquarters";
-      this.description = "Monumental curved glass corporate campus with reflecting waters, architectural louvers, and landscaped stone courtyard.";
+    // Dynamic HUD Telemetry & Narrative Synchronization starting directly from the building
+    if (sceneProgress < 0.22) {
+      this.kicker = "00 · CORPORATE HEADQUARTERS";
+      this.title = "DigiFormation Campus London";
+      this.description = "Monumental curved glass corporate campus with reflecting waters, architectural concrete grid, and landscaped stone courtyard.";
       this.statutoryNote = "Global Headquarters · Sovereign Digital Campus · London";
       this.metricBadge = "CAMPUS GROUNDS";
-      this.telemetry.statutoryStep = "CAMPUS APPROACH";
+      this.telemetry.statutoryStep = "CAMPUS ARRIVAL";
       this.telemetry.chapterTitle = "CORPORATE HEADQUARTERS";
       this.telemetry.focalLength = "35mm Prime";
-    } else if (sceneProgress < 0.60) {
+    } else if (sceneProgress < 0.45) {
       this.kicker = "00 · ARCHITECTURAL SIGNAGE";
       this.title = "Machined Silver Steel Identity";
       this.description = "Physical brushed silver architectural insignia mounted with heavy-gauge precision hardware and specular metal luster.";
@@ -536,16 +441,16 @@ export class SceneMasterPortals implements CinematicScene {
       this.telemetry.statutoryStep = "LOGO MOMENT";
       this.telemetry.chapterTitle = "EXTERIOR SILVER LOGO";
       this.telemetry.focalLength = "50mm Cine Lens";
-    } else if (sceneProgress < 0.72) {
+    } else if (sceneProgress < 0.65) {
       this.kicker = "00 · BUILDING FACADE";
       this.title = "Executive Suite Window Selection";
-      this.description = "Tracking along the architectural glass curtain wall. Targeting the 3rd-floor executive operational suite window.";
+      this.description = "Tracking along the architectural glass curtain wall. Targeting the executive operational suite window.";
       this.statutoryNote = "Floor-to-Ceiling Curtain Glass · Acoustic Double-Glazing";
       this.metricBadge = "WINDOW SELECTION";
       this.telemetry.statutoryStep = "FACADE SCAN";
       this.telemetry.chapterTitle = "WINDOW TARGETING";
       this.telemetry.focalLength = "40mm Anamorphic";
-    } else if (sceneProgress < 0.84) {
+    } else if (sceneProgress < 0.80) {
       this.kicker = "00 · OPTICAL TRANSITION";
       this.title = "Crossing Glass Boundary";
       this.description = "Continuous VFX optical pass-through gliding through exterior glass reflections directly into the climate-controlled office.";
@@ -554,7 +459,7 @@ export class SceneMasterPortals implements CinematicScene {
       this.telemetry.statutoryStep = "INTERIOR CROSSING";
       this.telemetry.chapterTitle = "GLASS THRESHOLD";
       this.telemetry.focalLength = "35mm Anamorphic";
-    } else if (sceneProgress < 0.94) {
+    } else if (sceneProgress < 0.92) {
       this.kicker = "00 · EXECUTIVE OFFICE SUITE";
       this.title = "DigiFormation Operational Suite";
       this.description = "Inside the real corporate office. Feature slatted walnut wall with interior silver logo, dual curved displays, and executive workstations.";
@@ -577,7 +482,6 @@ export class SceneMasterPortals implements CinematicScene {
 
   public cleanup(threeScene: THREE.Scene): void {
     threeScene.remove(this.sceneGroup);
-    this.earthOrbit.dispose();
     this.headquarters.dispose();
     this.officeInterior.dispose();
     this.canvasTextures.forEach((t) => t.dispose());

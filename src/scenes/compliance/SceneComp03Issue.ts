@@ -76,12 +76,41 @@ export class SceneComp03Issue implements CinematicScene {
     this.monitorMesh.position.set(0, 1.05, 0);
     this.sceneGroup.add(this.monitorMesh);
 
-    // Padlock object on table
-    const lockGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.06, 16);
-    const lockMat = new THREE.MeshStandardMaterial({ color: 0xef4444, metalness: 0.8, roughness: 0.2 });
-    const lock = new THREE.Mesh(lockGeo, lockMat);
-    lock.position.set(0.45, 0.79, 0.2);
-    this.sceneGroup.add(lock);
+    // Official Companies House Statutory Compliance Dossier Folder on desk
+    const dossierGroup = new THREE.Group();
+    dossierGroup.position.set(0.42, 0.76, 0.15);
+    dossierGroup.rotation.y = -0.18;
+
+    // Oxblood leather dossier folder
+    const folderGeo = new THREE.BoxGeometry(0.24, 0.02, 0.32);
+    const folderMat = new THREE.MeshStandardMaterial({
+      color: 0x7f1d1d, // Deep statutory oxblood red leather
+      roughness: 0.65,
+      metalness: 0.1,
+    });
+    const folder = new THREE.Mesh(folderGeo, folderMat);
+    folder.castShadow = true;
+    folder.receiveShadow = true;
+    dossierGroup.add(folder);
+
+    // Official gold brass spine binding
+    const spineGeo = new THREE.BoxGeometry(0.025, 0.022, 0.322);
+    const brassMat = new THREE.MeshStandardMaterial({
+      color: 0xd4af37, // Polished statutory gold brass
+      metalness: 0.85,
+      roughness: 0.25,
+    });
+    const spine = new THREE.Mesh(spineGeo, brassMat);
+    spine.position.x = -0.11;
+    dossierGroup.add(spine);
+
+    // Embossed gold Companies House seal medallion
+    const sealGeo = new THREE.CylinderGeometry(0.028, 0.028, 0.003, 24);
+    const seal = new THREE.Mesh(sealGeo, brassMat);
+    seal.position.set(0.04, 0.012, 0.05);
+    dossierGroup.add(seal);
+
+    this.sceneGroup.add(dossierGroup);
 
     threeScene.add(this.sceneGroup);
     this.sceneGroup.visible = false;
