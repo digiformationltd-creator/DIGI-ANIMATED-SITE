@@ -54,7 +54,7 @@ export const CinemaViewport: React.FC<CinemaViewportProps> = ({
       46,
       container.clientWidth / container.clientHeight,
       0.1,
-      100
+      350
     );
 
     const cameraController = new CinematicCameraController(camera);

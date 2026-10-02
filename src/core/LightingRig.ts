@@ -8,37 +8,37 @@ export class LightingRig {
   private screenBounceLight: THREE.PointLight;
 
   constructor(scene: THREE.Scene) {
-    // 1. Ambient environmental tone (Deep Slate / Indigo)
-    this.ambientLight = new THREE.AmbientLight(0x1a202c, 0.85);
+    // 1. Ambient environmental tone (Natural Daylight Sky Blue)
+    this.ambientLight = new THREE.AmbientLight(0xdbeafe, 1.25);
     scene.add(this.ambientLight);
 
-    // 2. Primary directional key light (Soft warm executive studio key)
-    this.keyLight = new THREE.DirectionalLight(0xf1f5f9, 2.2);
-    this.keyLight.position.set(4, 7, 5);
+    // 2. Primary directional sun key light (Bright Natural Daylight Sun)
+    this.keyLight = new THREE.DirectionalLight(0xfffdf0, 2.6);
+    this.keyLight.position.set(24, 38, 28);
     this.keyLight.castShadow = true;
     this.keyLight.shadow.mapSize.width = 2048;
     this.keyLight.shadow.mapSize.height = 2048;
     this.keyLight.shadow.camera.near = 0.5;
-    this.keyLight.shadow.camera.far = 25;
-    this.keyLight.shadow.camera.left = -4;
-    this.keyLight.shadow.camera.right = 4;
-    this.keyLight.shadow.camera.top = 4;
-    this.keyLight.shadow.camera.bottom = -4;
+    this.keyLight.shadow.camera.far = 120;
+    this.keyLight.shadow.camera.left = -30;
+    this.keyLight.shadow.camera.right = 30;
+    this.keyLight.shadow.camera.top = 30;
+    this.keyLight.shadow.camera.bottom = -30;
     this.keyLight.shadow.bias = -0.0003;
-    this.keyLight.shadow.radius = 2.5; // Soft cinematic penumbra
+    this.keyLight.shadow.radius = 2.0;
     scene.add(this.keyLight);
 
-    // 3. Controlled fill light (Soft ambient steel tint, no harsh top-left glare)
-    this.fillLight = new THREE.DirectionalLight(0x64748b, 0.45);
-    this.fillLight.position.set(-2, 3, 4);
+    // 3. Daylight fill light (Sky bounce)
+    this.fillLight = new THREE.DirectionalLight(0x93c5fd, 0.95);
+    this.fillLight.position.set(-20, 25, 20);
     scene.add(this.fillLight);
 
-    // 4. Sharp specular rim light (Outlines silhouettes and hardware edges)
-    this.rimLight = new THREE.DirectionalLight(0xdbeafe, 1.8);
-    this.rimLight.position.set(0, 5, -5);
+    // 4. Specular sun glint (Metallic luster for silver logo and architectural glass)
+    this.rimLight = new THREE.DirectionalLight(0xffffff, 1.8);
+    this.rimLight.position.set(10, 20, -25);
     scene.add(this.rimLight);
 
-    // 5. Emissive monitor bounce light (Illuminates desk and keyboard downwards from screen)
+    // 5. Emissive monitor bounce light
     this.screenBounceLight = new THREE.PointLight(0xdce7f5, 1.2, 3.0, 2.0);
     this.screenBounceLight.position.set(0, 0.78, 0.5);
     scene.add(this.screenBounceLight);
@@ -48,16 +48,12 @@ export class LightingRig {
     this.screenBounceLight.intensity = intensity;
   }
 
-  // Smooth cinematic illumination curve starting from near-darkness
+  // Consistent, bright cinematic daylight
   public setAtmosphere(progress: number): void {
-    // Reveal curve: 0.0 is near-darkness (0.15), fades up to full brilliance by 0.35
-    const reveal = Math.min(1, Math.max(0, (progress - 0.02) / 0.33));
-    const smoothReveal = reveal * reveal * (3 - 2 * reveal);
-
-    this.ambientLight.intensity = 0.18 + smoothReveal * 0.72;
-    this.keyLight.intensity = 0.35 + smoothReveal * 1.95;
-    this.fillLight.intensity = 0.15 + smoothReveal * 0.85;
-    this.rimLight.intensity = 0.25 + smoothReveal * 1.65;
+    this.ambientLight.intensity = 1.2;
+    this.keyLight.intensity = 2.5;
+    this.fillLight.intensity = 0.9;
+    this.rimLight.intensity = 1.6;
 
     // Screen emissive bounce intensifies as camera approaches display
     const screenFocus = Math.min(1, Math.max(0, (progress - 0.2) / 0.8));

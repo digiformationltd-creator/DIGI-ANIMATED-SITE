@@ -1,25 +1,27 @@
 import * as THREE from "three";
 import { MaterialFactory } from "../core/MaterialFactory";
+import { SilverLogoSignage } from "./SilverLogoSignage";
 
 /**
  * CorporateHeadquarters
- * Photorealistic 3D Google-style corporate headquarters campus.
- * Features:
- * - Real photographic glass curtain facade with warm interior office floor depths
- * - Authentic official DigiFormation Limited silver steel / brushed chrome metallic logo
- * - Grand architectural entrance canopy with glass revolving doors and illuminated foyer
- * - Real granite entrance plaza with water reflecting pools, architectural trees, and runway lighting
- * - Panoramic twilight skyline backdrop with distant architectural high-rises and city bokeh
+ * Photorealistic 3D recreation of the Google-style corporate campus from the reference photograph:
+ * - Bright, natural daylight sky with soft clouds and sun atmosphere
+ * - Right wing: Monumental curved 8-story crescent wing with architectural concrete grid frames & reflective blue glass
+ * - Center wing: Soaring curved blue reflective glass curtain wall with horizontal titanium louvers
+ * - Left wing: Stepped corporate wing with cantilevered white concrete balconies & ribbon glass
+ * - Multi-story central glass atrium entrance with transparent tempered doors
+ * - Courtyard: Interlocking stone pavers walkway curving toward the entrance
+ * - Landscaped earth mounds with warm brown mulch beds, green grass, mature shade tree, and saplings
+ * - Foreground Entrance Monument: Heavy textured granite plinth with real physical machined silver DigiFormation logo
+ * - Crown Parapet: Heavy-gauge brushed silver steel architectural signage
  */
 export class CorporateHeadquarters {
   private group: THREE.Group = new THREE.Group();
   private materials = MaterialFactory.getInstance();
-  private logoMesh: THREE.Mesh | null = null;
   private canvasTextures: THREE.CanvasTexture[] = [];
-  private logoImg: HTMLImageElement | null = null;
-  private logoWhiteImg: HTMLImageElement | null = null;
-  private logoCanvas: HTMLCanvasElement | null = null;
-  private logoTexture: THREE.CanvasTexture | null = null;
+  private monumentLogo: SilverLogoSignage | null = null;
+  private crownLogo: SilverLogoSignage | null = null;
+  private windowGlassMesh: THREE.Mesh | null = null;
 
   constructor() {
     this.buildCampus();
@@ -31,618 +33,520 @@ export class CorporateHeadquarters {
 
   private buildCampus(): void {
     // ========================================================
-    // 1. DISTANT PHOTOREALISTIC SKYLINE & TWILIGHT BACKDROP
+    // 1. DAYLIGHT SKYDOME & ATMOSPHERIC CLOUD BACKDROP
     // ========================================================
-    const skyGeo = new THREE.PlaneGeometry(120, 60);
+    const skyGeo = new THREE.SphereGeometry(95, 32, 24, 0, Math.PI * 2, 0, Math.PI * 0.52);
     const skyCanvas = document.createElement("canvas");
     skyCanvas.width = 2048;
     skyCanvas.height = 1024;
     const sCtx = skyCanvas.getContext("2d");
     if (sCtx) {
-      // Twilight sky gradient (deep indigo to dusk gold/cyan haze at horizon)
+      // Natural daylight gradient: Zenith blue -> Radiant azure -> Soft horizon haze
       const skyGrad = sCtx.createLinearGradient(0, 0, 0, 1024);
-      skyGrad.addColorStop(0, "#030712");
-      skyGrad.addColorStop(0.4, "#0b1220");
-      skyGrad.addColorStop(0.75, "#151e32");
-      skyGrad.addColorStop(0.92, "#1e293b");
-      skyGrad.addColorStop(1.0, "#2a374f");
+      skyGrad.addColorStop(0, "#1d4ed8");    // Vibrant zenith blue
+      skyGrad.addColorStop(0.35, "#3b82f6"); // Natural daylight azure
+      skyGrad.addColorStop(0.72, "#93c5fd"); // Soft atmosphere
+      skyGrad.addColorStop(0.92, "#e0f2fe"); // Horizon haze
+      skyGrad.addColorStop(1.0, "#ffffff");  // Sun horizon glint
       sCtx.fillStyle = skyGrad;
       sCtx.fillRect(0, 0, 2048, 1024);
 
-      // Realistic soft cloud wisps
-      sCtx.fillStyle = "rgba(148, 163, 184, 0.04)";
-      for (let i = 0; i < 12; i++) {
+      // Realistic soft white cumulus clouds (as in reference photo)
+      const cloudClusters = [
+        [320, 360, 260, 80],
+        [780, 280, 340, 110],
+        [1350, 320, 420, 130],
+        [1820, 290, 280, 90],
+        [540, 480, 220, 60],
+        [1120, 460, 300, 75],
+      ];
+
+      cloudClusters.forEach(([cx, cy, rx, ry]) => {
+        const cGrad = sCtx.createRadialGradient(cx, cy, 10, cx, cy, rx);
+        cGrad.addColorStop(0, "rgba(255, 255, 255, 0.92)");
+        cGrad.addColorStop(0.45, "rgba(255, 255, 255, 0.65)");
+        cGrad.addColorStop(0.85, "rgba(240, 249, 255, 0.25)");
+        cGrad.addColorStop(1.0, "rgba(255, 255, 255, 0)");
+        sCtx.fillStyle = cGrad;
         sCtx.beginPath();
-        sCtx.ellipse(150 + i * 160, 450 + (i % 3) * 60, 200, 35, 0, 0, Math.PI * 2);
+        sCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
         sCtx.fill();
-      }
-
-      // Distant London / Tech Campus Skyline Silhouettes
-      sCtx.fillStyle = "#070b14";
-      for (let i = 0; i < 75; i++) {
-        const bx = i * 28;
-        const bw = 18 + ((i * 37) % 24);
-        const bh = 100 + ((i * 73) % 260);
-        sCtx.fillRect(bx, 1024 - bh, bw, bh);
-
-        // Window lighting bokeh dots
-        sCtx.fillStyle = "rgba(254, 240, 138, 0.45)";
-        for (let r = 0; r < Math.floor(bh / 22); r++) {
-          for (let c = 0; c < 3; c++) {
-            if ((i + r + c) % 4 === 0) {
-              sCtx.fillRect(bx + 4 + c * 5, 1024 - bh + 14 + r * 18, 3, 5);
-            }
-          }
-        }
-        sCtx.fillStyle = "#070b14";
-      }
-
-      // Atmospheric horizon mist
-      const mistGrad = sCtx.createLinearGradient(0, 750, 0, 1024);
-      mistGrad.addColorStop(0, "rgba(30, 41, 59, 0.0)");
-      mistGrad.addColorStop(1, "rgba(15, 23, 42, 0.85)");
-      sCtx.fillStyle = mistGrad;
-      sCtx.fillRect(0, 750, 2048, 274);
+      });
     }
 
     const skyTexture = new THREE.CanvasTexture(skyCanvas);
     skyTexture.colorSpace = THREE.SRGBColorSpace;
     this.canvasTextures.push(skyTexture);
 
-    const skyMat = new THREE.MeshBasicMaterial({ map: skyTexture });
+    const skyMat = new THREE.MeshBasicMaterial({
+      map: skyTexture,
+      side: THREE.BackSide,
+      depthWrite: false,
+    });
     const skyMesh = new THREE.Mesh(skyGeo, skyMat);
-    skyMesh.position.set(0, 24, -32);
+    skyMesh.position.set(0, -4, 0);
     this.group.add(skyMesh);
 
     // ========================================================
-    // 2. EXTERIOR PLAZA GROUNDS & WATER REFLECTING POOLS
+    // 2. COURTYARD PLAZA & INTERLOCKING STONE PAVERS
     // ========================================================
-    // Dark Honed Granite Plaza Pavers (55m x 65m)
-    const plazaGeo = new THREE.PlaneGeometry(55, 65);
-    const plazaMat = new THREE.MeshStandardMaterial({
-      color: 0x090d14,
-      roughness: 0.32,
-      metalness: 0.45,
-    });
-    const plazaMesh = new THREE.Mesh(plazaGeo, plazaMat);
-    plazaMesh.rotation.x = -Math.PI / 2;
-    plazaMesh.position.set(0, 0, 18);
-    plazaMesh.receiveShadow = true;
-    this.group.add(plazaMesh);
+    // Ground Base (60m x 80m)
+    const groundGeo = new THREE.PlaneGeometry(75, 85);
+    const groundCanvas = document.createElement("canvas");
+    groundCanvas.width = 1024;
+    groundCanvas.height = 1024;
+    const gCtx = groundCanvas.getContext("2d");
+    if (gCtx) {
+      // Warm stone plaza ground
+      gCtx.fillStyle = "#e2e8f0";
+      gCtx.fillRect(0, 0, 1024, 1024);
 
-    // Center Grand Walkway with Inlaid Brushed Stainless Runners
-    const walkGeo = new THREE.PlaneGeometry(9, 60);
-    const walkMat = new THREE.MeshStandardMaterial({
-      color: 0x111622,
-      roughness: 0.22,
-      metalness: 0.55,
-    });
-    const walkMesh = new THREE.Mesh(walkGeo, walkMat);
-    walkMesh.rotation.x = -Math.PI / 2;
-    walkMesh.position.set(0, 0.01, 18);
-    this.group.add(walkMesh);
-
-    // Inlaid Ground LED Runway Lighting Strips
-    const stripGeo = new THREE.PlaneGeometry(0.12, 54);
-    const stripMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
-    const leftStrip = new THREE.Mesh(stripGeo, stripMat);
-    leftStrip.rotation.x = -Math.PI / 2;
-    leftStrip.position.set(-4.4, 0.02, 18);
-    this.group.add(leftStrip);
-
-    const rightStrip = new THREE.Mesh(stripGeo, stripMat);
-    rightStrip.rotation.x = -Math.PI / 2;
-    rightStrip.position.set(4.4, 0.02, 18);
-    this.group.add(rightStrip);
-
-    // Water Reflecting Pools (Flanking both sides of grand walkway)
-    const poolGeo = new THREE.PlaneGeometry(16, 32);
-    const poolMat = new THREE.MeshStandardMaterial({
-      color: 0x020617,
-      roughness: 0.04,
-      metalness: 0.95,
-    });
-    const leftPool = new THREE.Mesh(poolGeo, poolMat);
-    leftPool.rotation.x = -Math.PI / 2;
-    leftPool.position.set(-15, 0.015, 20);
-    this.group.add(leftPool);
-
-    const rightPool = new THREE.Mesh(poolGeo, poolMat);
-    rightPool.rotation.x = -Math.PI / 2;
-    rightPool.position.set(15, 0.015, 20);
-    this.group.add(rightPool);
-
-    // Architectural Perimeter Bollard Lights
-    for (let z = 6; z <= 34; z += 5.5) {
-      this.createBollard(-4.9, z);
-      this.createBollard(4.9, z);
-      this.createBollard(-23.5, z);
-      this.createBollard(23.5, z);
-    }
-
-    // Landscaped Architectural Planters / Hedgerows
-    for (let z = 10; z <= 30; z += 8) {
-      this.createPlanter(-7.5, z);
-      this.createPlanter(7.5, z);
-    }
-
-    // ========================================================
-    // 3. PHOTOREALISTIC CORPORATE HEADQUARTERS ARCHITECTURE
-    // ========================================================
-    // Building Dimensions: Width 44m, Height 24m, Depth 26m
-    const buildingWidth = 44;
-    const buildingHeight = 24;
-    const buildingDepth = 26;
-
-    // Real Architectural High-Rise Facade Texture
-    // Renders realistic office floor depths, warm window lights, and steel grid
-    const facadeCanvas = document.createElement("canvas");
-    facadeCanvas.width = 2048;
-    facadeCanvas.height = 1024;
-    const fCtx = facadeCanvas.getContext("2d");
-    if (fCtx) {
-      // Base dark tinted architectural glass
-      fCtx.fillStyle = "#0c1322";
-      fCtx.fillRect(0, 0, 2048, 1024);
-
-      // Sky reflection gradient on glass
-      const reflGrad = fCtx.createLinearGradient(0, 0, 0, 1024);
-      reflGrad.addColorStop(0, "rgba(56, 189, 248, 0.25)");
-      reflGrad.addColorStop(0.3, "rgba(30, 41, 59, 0.4)");
-      reflGrad.addColorStop(0.7, "rgba(15, 23, 42, 0.65)");
-      reflGrad.addColorStop(1, "rgba(2, 6, 23, 0.85)");
-      fCtx.fillStyle = reflGrad;
-      fCtx.fillRect(0, 0, 2048, 1024);
-
-      // Floor Dividers (6 distinct levels)
-      const numFloors = 6;
-      const floorH = 1024 / numFloors;
-      for (let f = 0; f < numFloors; f++) {
-        const fy = f * floorH;
-
-        // Structural Spandrel Glass Band (Floor slab divider)
-        fCtx.fillStyle = "#1e293b";
-        fCtx.fillRect(0, fy + floorH - 24, 2048, 24);
-        fCtx.strokeStyle = "#475569";
-        fCtx.lineWidth = 2;
-        fCtx.strokeRect(0, fy + floorH - 24, 2048, 24);
-
-        // Office Window Bays with Warm Interior Illumination
-        const numBays = 22;
-        const bayW = 2048 / numBays;
-        for (let b = 0; b < numBays; b++) {
-          const bx = b * bayW + 8;
-          const bw = bayW - 16;
-          const bh = floorH - 36;
-
-          // Warm office interior glow (3000K soft executive light)
-          const isLit = (f + b * 3) % 5 !== 0;
-          if (isLit) {
-            const officeGrad = fCtx.createLinearGradient(0, fy + 8, 0, fy + 8 + bh);
-            officeGrad.addColorStop(0, "rgba(254, 243, 199, 0.35)");
-            officeGrad.addColorStop(0.4, "rgba(251, 191, 36, 0.18)");
-            officeGrad.addColorStop(1, "rgba(15, 23, 42, 0.5)");
-            fCtx.fillStyle = officeGrad;
-            fCtx.fillRect(bx, fy + 8, bw, bh);
-
-            // Subtle interior office blinds / louvers
-            fCtx.fillStyle = "rgba(15, 23, 42, 0.4)";
-            const blindsLines = 4 + (b % 4);
-            for (let l = 0; l < blindsLines; l++) {
-              fCtx.fillRect(bx, fy + 12 + l * 10, bw, 2);
-            }
-          } else {
-            fCtx.fillStyle = "rgba(15, 23, 42, 0.75)";
-            fCtx.fillRect(bx, fy + 8, bw, bh);
-          }
-
-          // Architectural Window Frames
-          fCtx.strokeStyle = "rgba(71, 85, 105, 0.6)";
-          fCtx.lineWidth = 3;
-          fCtx.strokeRect(bx, fy + 8, bw, bh);
-        }
+      // Cobblestone interlocking paver grid (matching the reference walkway)
+      gCtx.strokeStyle = "rgba(100, 116, 139, 0.35)";
+      gCtx.lineWidth = 1.5;
+      for (let x = 0; x <= 1024; x += 32) {
+        gCtx.beginPath();
+        gCtx.moveTo(x, 0); gCtx.lineTo(x, 1024);
+        gCtx.stroke();
+      }
+      for (let y = 0; y <= 1024; y += 18) {
+        gCtx.beginPath();
+        gCtx.moveTo(0, y); gCtx.lineTo(1024, y);
+        gCtx.stroke();
       }
 
-      // Ground Level Double-Height Grand Glass Atrium Foyer
-      fCtx.fillStyle = "rgba(254, 243, 199, 0.45)";
-      fCtx.fillRect(350, 780, 1348, 244);
-      fCtx.strokeStyle = "#38bdf8";
-      fCtx.lineWidth = 4;
-      fCtx.strokeRect(350, 780, 1348, 244);
-
-      // Atrium Welcome Inscription
-      fCtx.fillStyle = "#ffffff";
-      fCtx.font = "900 36px 'Inter', sans-serif";
-      fCtx.textAlign = "center";
-      fCtx.fillText("DIGIFORMATION LIMITED · EXECUTIVE FOYER", 1024, 880);
-      fCtx.fillStyle = "#94a3b8";
-      fCtx.font = "bold 20px monospace";
-      fCtx.fillText("GLOBAL HEADQUARTERS · LONDON JURISDICTION", 1024, 920);
+      // Natural tone variations on pavers
+      for (let i = 0; i < 600; i++) {
+        const px = Math.floor(Math.random() * 32) * 32;
+        const py = Math.floor(Math.random() * 56) * 18;
+        const tone = Math.random() > 0.5 ? "rgba(203, 213, 225, 0.4)" : "rgba(241, 245, 249, 0.5)";
+        gCtx.fillStyle = tone;
+        gCtx.fillRect(px + 1, py + 1, 30, 16);
+      }
     }
 
-    const facadeTexture = new THREE.CanvasTexture(facadeCanvas);
-    facadeTexture.colorSpace = THREE.SRGBColorSpace;
-    facadeTexture.minFilter = THREE.LinearFilter;
-    facadeTexture.magFilter = THREE.LinearFilter;
-    this.canvasTextures.push(facadeTexture);
+    const groundTexture = new THREE.CanvasTexture(groundCanvas);
+    groundTexture.wrapS = THREE.RepeatWrapping;
+    groundTexture.wrapT = THREE.RepeatWrapping;
+    groundTexture.repeat.set(4, 5);
+    groundTexture.colorSpace = THREE.SRGBColorSpace;
+    this.canvasTextures.push(groundTexture);
 
-    // Front Upper Glass Curtain Wall Mesh (Levels 2 to 6, Y: 4.8m to 24m)
-    const upperFacadeH = buildingHeight - 4.8;
-    const facadeGeo = new THREE.PlaneGeometry(buildingWidth, upperFacadeH);
-    const facadeMat = new THREE.MeshStandardMaterial({
-      map: facadeTexture,
-      roughness: 0.12,
-      metalness: 0.88,
-      emissive: new THREE.Color(0xffffff),
-      emissiveMap: facadeTexture,
-      emissiveIntensity: 0.55,
+    const groundMat = new THREE.MeshStandardMaterial({
+      map: groundTexture,
+      roughness: 0.55,
+      metalness: 0.15,
     });
-    const facadeMesh = new THREE.Mesh(facadeGeo, facadeMat);
-    facadeMesh.position.set(0, 4.8 + upperFacadeH / 2, 1.0);
-    this.group.add(facadeMesh);
+    const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+    groundMesh.rotation.x = -Math.PI / 2;
+    groundMesh.position.set(0, 0, 15);
+    groundMesh.receiveShadow = true;
+    this.group.add(groundMesh);
 
-    // Ground Floor Side Glass Panels (Flanking the central grand entrance portal)
-    const sideGlassW = (buildingWidth - 12) / 2; // 16m each
-    const sideGlassGeo = new THREE.PlaneGeometry(sideGlassW, 4.8);
-    const sideGlassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x1e293b,
-      transparent: true,
-      opacity: 0.4,
-      roughness: 0.08,
+    // ========================================================
+    // 3. LANDSCAPED MULCH BERMS & MANICURED BERM MOUNDS
+    // ========================================================
+    // Left & Right warm brown mulch beds (exactly like the photo)
+    const mulchMat = new THREE.MeshStandardMaterial({
+      color: 0x8a624a, // Warm cedar mulch brown
+      roughness: 0.95,
+      metalness: 0.05,
+    });
+
+    // Left curved berm
+    const lBermGeo = new THREE.CylinderGeometry(14, 18, 0.45, 32);
+    const lBerm = new THREE.Mesh(lBermGeo, mulchMat);
+    lBerm.position.set(-16, 0.2, 18);
+    lBerm.scale.set(1.4, 1, 1.8);
+    lBerm.receiveShadow = true;
+    this.group.add(lBerm);
+
+    // Right curved berm
+    const rBermGeo = new THREE.CylinderGeometry(11, 15, 0.4, 32);
+    const rBerm = new THREE.Mesh(rBermGeo, mulchMat);
+    rBerm.position.set(15, 0.18, 22);
+    rBerm.scale.set(1.2, 1, 1.6);
+    rBerm.receiveShadow = true;
+    this.group.add(rBerm);
+
+    // ========================================================
+    // 4. TREES & NATURAL FOLIAGE (MATCHING REFERENCE PHOTO)
+    // ========================================================
+    // Left Foreground Mature Shade Tree
+    this.createMatureTree(-13, 14);
+
+    // Landscaped saplings on the berms with bamboo support stakes
+    this.createSaplingWithStakes(-6.5, 23);
+    this.createSaplingWithStakes(7.5, 24);
+    this.createSaplingWithStakes(12.5, 18);
+    this.createSaplingWithStakes(-18, 26);
+
+    // ========================================================
+    // 5. ENTRANCE MONUMENT (FOREGROUND GRANITE PLINTH & LOGO)
+    // ========================================================
+    // Heavy Textured Architectural Granite Plinth Block (matching photo)
+    const plinthGeo = new THREE.BoxGeometry(4.8, 2.5, 0.85);
+    const plinthMat = new THREE.MeshStandardMaterial({
+      color: 0x94a3b8, // Medium architectural granite
+      roughness: 0.38,
+      metalness: 0.25,
+    });
+    const plinth = new THREE.Mesh(plinthGeo, plinthMat);
+    plinth.position.set(2.2, 1.25, 18.0);
+    plinth.castShadow = true;
+    plinth.receiveShadow = true;
+    this.group.add(plinth);
+
+    // Polished Silver Chrome Top Coping on Monument
+    const plinthCapGeo = new THREE.BoxGeometry(4.92, 0.08, 0.92);
+    const plinthCap = new THREE.Mesh(plinthCapGeo, this.materials.getPolishedChrome());
+    plinthCap.position.set(2.2, 2.52, 18.0);
+    this.group.add(plinthCap);
+
+    // Mount Official Machined Silver Logo Plaque on left side of Monument (matching campus-reference.jpg)
+    // Using the exact uploaded official silver logo (/assets/brand/digiformation-silver-logo-official.jpg)
+    this.monumentLogo = new SilverLogoSignage(2.1, 2.1, 0.08, true);
+    const monLogoGroup = this.monumentLogo.getGroup();
+    monLogoGroup.position.set(1.05, 1.25, 18.45);
+    this.group.add(monLogoGroup);
+
+    // ========================================================
+    // 6. CORPORATE HEADQUARTERS ARCHITECTURE
+    // ========================================================
+    const buildingHeight = 24.0; // 8 floors @ 3m
+
+    // A. Right Wing: Grand Curved Concrete Grid Facade (Radius = 26m)
+    this.buildCurvedConcreteGridWing(buildingHeight);
+
+    // B. Center Wing: Soaring Curved Blue Glass Curtain Wall
+    this.buildCenterGlassCurtainWing(buildingHeight);
+
+    // C. Left Wing: Stepped Modern Office Wing
+    this.buildLeftSteppedWing(buildingHeight);
+
+    // D. Multi-Story Transparent Glass Atrium Entrance
+    this.buildGlassAtriumEntrance(buildingHeight);
+
+    // E. Building Crown Architectural Silver Steel Logo Signage
+    this.buildCrownSilverSignage(buildingHeight);
+  }
+
+  // Right Wing: Curved Architectural Concrete Grid (8 floors, rectangular recessed bays)
+  private buildCurvedConcreteGridWing(height: number): void {
+    const wingGroup = new THREE.Group();
+    const radius = 28;
+    const startAngle = -0.25;
+    const endAngle = 0.85;
+    const floors = 8;
+    const floorHeight = height / floors;
+
+    // Concrete material
+    const concreteMat = new THREE.MeshStandardMaterial({
+      color: 0xd1d5db, // Light grey architectural concrete
+      roughness: 0.5,
+      metalness: 0.15,
+    });
+
+    // Deep blue reflective solar glass material
+    const solarGlassMat = new THREE.MeshPhysicalMaterial({
+      color: 0x1e40af, // Deep vibrant architectural blue
+      roughness: 0.04,
+      metalness: 0.88,
+      transmission: 0.6,
+      ior: 1.52,
+    });
+
+    // Build repeating curved columns & spandrels
+    const bayCount = 14;
+    for (let b = 0; b <= bayCount; b++) {
+      const angle = startAngle + (b / bayCount) * (endAngle - startAngle);
+      const x = Math.sin(angle) * radius + 12;
+      const z = Math.cos(angle) * radius - 26;
+
+      // Vertical concrete structural column
+      const colGeo = new THREE.BoxGeometry(0.45, height, 0.65);
+      const col = new THREE.Mesh(colGeo, concreteMat);
+      col.position.set(x, height / 2, z);
+      col.rotation.y = angle;
+      col.castShadow = true;
+      wingGroup.add(col);
+    }
+
+    // Horizontal concrete floor spandrels
+    for (let f = 0; f <= floors; f++) {
+      const y = f * floorHeight;
+      const spandrelGeo = new THREE.CylinderGeometry(radius, radius, 0.42, 36, 1, true, startAngle, endAngle - startAngle);
+      const spandrel = new THREE.Mesh(spandrelGeo, concreteMat);
+      spandrel.position.set(12, y, -26);
+      wingGroup.add(spandrel);
+    }
+
+    // Recessed Blue Glass Window Surface
+    const glassGeo = new THREE.CylinderGeometry(radius - 0.25, radius - 0.25, height, 48, 8, true, startAngle, endAngle - startAngle);
+    const glass = new THREE.Mesh(glassGeo, solarGlassMat);
+    glass.position.set(12, height / 2, -26);
+    wingGroup.add(glass);
+
+    this.group.add(wingGroup);
+  }
+
+  // Center Wing: Soaring Curved Blue Glass Curtain Wall with Titanium Louvers
+  private buildCenterGlassCurtainWing(height: number): void {
+    const centerGroup = new THREE.Group();
+    const radius = 32;
+    const startAngle = Math.PI - 0.55;
+    const arc = 0.95;
+
+    // High-performance reflective curtain glass
+    const curtainGlassMat = new THREE.MeshPhysicalMaterial({
+      color: 0x2563eb, // High-performance sky-reflective blue
+      roughness: 0.03,
+      metalness: 0.92,
+      transmission: 0.5,
+      ior: 1.55,
+    });
+
+    const glassGeo = new THREE.CylinderGeometry(radius, radius, height, 48, 8, true, startAngle, arc);
+    const glassMesh = new THREE.Mesh(glassGeo, curtainGlassMat);
+    glassMesh.position.set(-6, height / 2, -30);
+    centerGroup.add(glassMesh);
+
+    // Horizontal Brushed Titanium Sun Louvers
+    const louverMat = this.materials.getBrushedTitanium();
+    for (let y = 3; y <= height; y += 3) {
+      const louverGeo = new THREE.CylinderGeometry(radius + 0.35, radius + 0.35, 0.08, 48, 1, true, startAngle, arc);
+      const louver = new THREE.Mesh(louverGeo, louverMat);
+      louver.position.set(-6, y, -30);
+      centerGroup.add(louver);
+    }
+
+    this.group.add(centerGroup);
+  }
+
+  // Left Wing: Stepped Modern Office Wing with Balconies
+  private buildLeftSteppedWing(height: number): void {
+    const leftGroup = new THREE.Group();
+    const concreteMat = new THREE.MeshStandardMaterial({
+      color: 0xe2e8f0,
+      roughness: 0.42,
+      metalness: 0.15,
+    });
+    const ribbonGlassMat = new THREE.MeshPhysicalMaterial({
+      color: 0x1d4ed8,
+      roughness: 0.05,
       metalness: 0.85,
       transmission: 0.65,
     });
 
-    const lSideGlass = new THREE.Mesh(sideGlassGeo, sideGlassMat);
-    lSideGlass.position.set(-6 - sideGlassW / 2, 2.4, 1.0);
-    this.group.add(lSideGlass);
+    const floors = 7;
+    for (let f = 0; f < floors; f++) {
+      const y = f * 3.4;
+      const stepOffset = f * 0.45;
 
-    const rSideGlass = new THREE.Mesh(sideGlassGeo, sideGlassMat);
-    rSideGlass.position.set(6 + sideGlassW / 2, 2.4, 1.0);
-    this.group.add(rSideGlass);
+      // Balcony slab
+      const slabGeo = new THREE.BoxGeometry(16, 0.38, 9);
+      const slab = new THREE.Mesh(slabGeo, concreteMat);
+      slab.position.set(-24 - stepOffset, y + 0.2, -6 - stepOffset * 0.5);
+      slab.castShadow = true;
+      leftGroup.add(slab);
 
-    // Building Open Architectural Perimeter Enclosure (Allows unobstructed interior office view)
-    const wallMat = new THREE.MeshStandardMaterial({
-      color: 0x080c14,
-      roughness: 0.65,
-      metalness: 0.25,
-    });
-
-    // Rear Atrium Wall (Z = -14.0m)
-    const rearWallGeo = new THREE.BoxGeometry(buildingWidth, buildingHeight, 0.6);
-    const rearWall = new THREE.Mesh(rearWallGeo, wallMat);
-    rearWall.position.set(0, buildingHeight / 2, -14.0);
-    this.group.add(rearWall);
-
-    // Left Exterior Wall (X = -22m)
-    const sideWallGeo = new THREE.BoxGeometry(0.6, buildingHeight, 15.5);
-    const lSideWall = new THREE.Mesh(sideWallGeo, wallMat);
-    lSideWall.position.set(-buildingWidth / 2, buildingHeight / 2, -6.5);
-    this.group.add(lSideWall);
-
-    // Right Exterior Wall (X = +22m)
-    const rSideWall = new THREE.Mesh(sideWallGeo, wallMat);
-    rSideWall.position.set(buildingWidth / 2, buildingHeight / 2, -6.5);
-    this.group.add(rSideWall);
-
-    // Roof Slab (Y = 24m)
-    const roofGeo = new THREE.BoxGeometry(buildingWidth, 0.6, 15.5);
-    const roofMesh = new THREE.Mesh(roofGeo, wallMat);
-    roofMesh.position.set(0, buildingHeight, -6.5);
-    this.group.add(roofMesh);
-
-    // Architectural Steel Mullions / Exterior Louvers
-    const mullionMat = new THREE.MeshStandardMaterial({
-      color: 0x475569,
-      roughness: 0.25,
-      metalness: 0.92,
-    });
-
-    for (let x = -buildingWidth / 2; x <= buildingWidth / 2; x += 4.0) {
-      if (Math.abs(x) < 3.5) continue; // Keep grand entrance open for camera
-      const colGeo = new THREE.BoxGeometry(0.18, buildingHeight, 0.45);
-      const colMesh = new THREE.Mesh(colGeo, mullionMat);
-      colMesh.position.set(x, buildingHeight / 2, 1.05);
-      this.group.add(colMesh);
+      // Ribbon window pane
+      const winGeo = new THREE.BoxGeometry(15.6, 2.8, 0.1);
+      const win = new THREE.Mesh(winGeo, ribbonGlassMat);
+      win.position.set(-24 - stepOffset, y + 1.8, -1.8 - stepOffset * 0.5);
+      leftGroup.add(win);
     }
 
-    // ========================================================
-    // 4. GRAND ENTRANCE CANOPY & SLIDING GLASS PORTAL
-    // ========================================================
-    // Cantilevered Architectural Canopy (18m wide x 8m deep)
-    const canopyGeo = new THREE.BoxGeometry(18, 0.35, 8);
+    this.group.add(leftGroup);
+  }
+
+  // Center Grand Glass Atrium & Double-Glazed Window Entry Portal
+  private buildGlassAtriumEntrance(height: number): void {
+    const atriumGroup = new THREE.Group();
+
+    // Atrium Glass Canopy
+    const canopyGeo = new THREE.BoxGeometry(14, 0.3, 7);
     const canopyMat = new THREE.MeshStandardMaterial({
-      color: 0x0f172a,
-      roughness: 0.25,
-      metalness: 0.9,
+      color: 0x1e293b,
+      roughness: 0.2,
+      metalness: 0.85,
     });
     const canopy = new THREE.Mesh(canopyGeo, canopyMat);
-    canopy.position.set(0, 5.0, 5.0);
-    this.group.add(canopy);
+    canopy.position.set(0, 4.8, 4.5);
+    canopy.castShadow = true;
+    atriumGroup.add(canopy);
 
-    // Brushed Titanium Canopy Fascia Trim
-    const canopyTrimGeo = new THREE.BoxGeometry(18.25, 0.4, 8.2);
-    const canopyTrim = new THREE.Mesh(canopyTrimGeo, this.materials.getBrushedTitanium());
-    canopyTrim.position.set(0, 5.0, 5.0);
-    this.group.add(canopyTrim);
-
-    // Recessed Canopy Warm Architectural Downlights
-    for (let cx = -6; cx <= 6; cx += 4) {
-      for (let cz = 3; cz <= 7; cz += 4) {
-        const fixGeo = new THREE.CylinderGeometry(0.3, 0.3, 0.05, 16);
-        const fixMat = new THREE.MeshBasicMaterial({ color: 0xfff7ed });
-        const fix = new THREE.Mesh(fixGeo, fixMat);
-        fix.position.set(cx, 4.82, cz);
-        this.group.add(fix);
-      }
-    }
-
-    // Grand Entrance Door Portal Frame (Polished Chrome Steel Posts & Header)
-    const postGeo = new THREE.BoxGeometry(0.4, 4.4, 0.4);
+    // Chrome Entrance Frame Posts
+    const postGeo = new THREE.BoxGeometry(0.35, 4.8, 0.35);
     const leftPost = new THREE.Mesh(postGeo, this.materials.getPolishedChrome());
-    leftPost.position.set(-4.5, 2.2, 1.15);
-    this.group.add(leftPost);
+    leftPost.position.set(-5.5, 2.4, 4.5);
+    atriumGroup.add(leftPost);
 
     const rightPost = new THREE.Mesh(postGeo, this.materials.getPolishedChrome());
-    rightPost.position.set(4.5, 2.2, 1.15);
-    this.group.add(rightPost);
+    rightPost.position.set(5.5, 2.4, 4.5);
+    atriumGroup.add(rightPost);
 
-    const headerGeo = new THREE.BoxGeometry(9.4, 0.4, 0.4);
-    const headerMesh = new THREE.Mesh(headerGeo, this.materials.getPolishedChrome());
-    headerMesh.position.set(0, 4.4, 1.15);
-    this.group.add(headerMesh);
-
-    // Architectural Automatic Sliding Glass Doors (Parted Open for Smooth Camera Pass-Through)
-    const doorGeo = new THREE.BoxGeometry(2.4, 4.0, 0.08);
+    // Sliding Tempered Glass Entrance Doors (Parted open for camera pass-through)
+    const doorGeo = new THREE.BoxGeometry(2.4, 4.2, 0.08);
     const doorMat = new THREE.MeshPhysicalMaterial({
       color: 0x93c5fd,
       transparent: true,
-      opacity: 0.25,
+      opacity: 0.35,
       roughness: 0.05,
-      metalness: 0.8,
+      metalness: 0.85,
       transmission: 0.85,
+    });
+    const lDoor = new THREE.Mesh(doorGeo, doorMat);
+    lDoor.position.set(-3.2, 2.1, 1.05);
+    atriumGroup.add(lDoor);
+
+    const rDoor = new THREE.Mesh(doorGeo, doorMat);
+    rDoor.position.set(3.2, 2.1, 1.05);
+    atriumGroup.add(rDoor);
+
+    // Double-Glazed Executive Window (Z = 1.02)
+    const winGeo = new THREE.PlaneGeometry(8.5, 4.2);
+    const winMat = new THREE.MeshPhysicalMaterial({
+      color: 0x93c5fd,
+      transparent: true,
+      opacity: 0.85,
+      roughness: 0.04,
+      metalness: 0.88,
+      transmission: 0.75,
       ior: 1.5,
     });
-    const leftDoor = new THREE.Mesh(doorGeo, doorMat);
-    leftDoor.position.set(-3.2, 2.0, 1.15);
-    this.group.add(leftDoor);
+    this.windowGlassMesh = new THREE.Mesh(winGeo, winMat);
+    this.windowGlassMesh.position.set(0, 2.1, 1.02);
+    atriumGroup.add(this.windowGlassMesh);
 
-    const rightDoor = new THREE.Mesh(doorGeo, doorMat);
-    rightDoor.position.set(3.2, 2.0, 1.15);
-    this.group.add(rightDoor);
+    this.group.add(atriumGroup);
+  }
 
-    // ========================================================
-    // 5. CROWN PARAPET & REAL SILVER STEEL DIGIFORMATION LOGO
-    // ========================================================
-    // Building Top Architectural Parapet (38m wide x 3.8m high)
-    const parapetGeo = new THREE.BoxGeometry(38, 3.8, 1.5);
+  // Building Crown: Real Machined Silver Steel DIGIFORMATION Signage
+  private buildCrownSilverSignage(height: number): void {
+    // Crown Architectural Parapet
+    const parapetGeo = new THREE.BoxGeometry(26, 3.2, 1.2);
     const parapetMat = new THREE.MeshStandardMaterial({
-      color: 0x0a0f18,
-      roughness: 0.4,
-      metalness: 0.8,
+      color: 0x1e293b,
+      roughness: 0.35,
+      metalness: 0.75,
     });
     const parapet = new THREE.Mesh(parapetGeo, parapetMat);
-    parapet.position.set(0, buildingHeight + 1.4, 1.1);
+    parapet.position.set(-2, height + 1.2, -1.0);
     this.group.add(parapet);
 
-    // Silver Brushed Steel Parapet Coping
-    const copingGeo = new THREE.BoxGeometry(38.4, 0.3, 1.8);
+    // Polished Silver Coping Trim
+    const copingGeo = new THREE.BoxGeometry(26.4, 0.25, 1.4);
     const coping = new THREE.Mesh(copingGeo, this.materials.getPolishedChrome());
-    coping.position.set(0, buildingHeight + 3.3, 1.1);
+    coping.position.set(-2, height + 2.8, -1.0);
     this.group.add(coping);
 
-    // Prepare Silver Steel Logo Canvas and 3D Plaque
-    this.initSilverSteelLogo(buildingHeight);
-
-    // ========================================================
-    // 6. CAMPUS ENTRANCE MONUMENT (Google-Style Driveway Sign)
-    // ========================================================
-    const monPlinthGeo = new THREE.BoxGeometry(7.2, 2.2, 1.4);
-    const monPlinthMat = new THREE.MeshStandardMaterial({
-      color: 0x090e17,
-      roughness: 0.28,
-      metalness: 0.6,
-    });
-    const monPlinth = new THREE.Mesh(monPlinthGeo, monPlinthMat);
-    monPlinth.position.set(-9.5, 1.1, 28);
-    this.group.add(monPlinth);
-
-    // Polished Silver Steel Monument Accent Frame
-    const monTrimGeo = new THREE.BoxGeometry(7.35, 0.15, 1.55);
-    const monTrim = new THREE.Mesh(monTrimGeo, this.materials.getPolishedChrome());
-    monTrim.position.set(-9.5, 2.2, 28);
-    this.group.add(monTrim);
+    // Mount Physical Machined Silver Logo on Building Crown
+    this.crownLogo = new SilverLogoSignage(12.5, 3.8, 0.12, false);
+    const crownGroup = this.crownLogo.getGroup();
+    crownGroup.position.set(-2, height + 1.2, -0.35);
+    this.group.add(crownGroup);
   }
 
-  private initSilverSteelLogo(buildingHeight: number): void {
-    this.logoCanvas = document.createElement("canvas");
-    this.logoCanvas.width = 2048;
-    this.logoCanvas.height = 512;
+  // Create Left Foreground Mature Shade Tree
+  private createMatureTree(x: number, z: number): void {
+    const tree = new THREE.Group();
+    tree.position.set(x, 0, z);
 
-    this.logoTexture = new THREE.CanvasTexture(this.logoCanvas);
-    this.logoTexture.colorSpace = THREE.SRGBColorSpace;
-    this.logoTexture.minFilter = THREE.LinearFilter;
-    this.logoTexture.magFilter = THREE.LinearFilter;
-    this.canvasTextures.push(this.logoTexture);
+    // Natural curved trunk
+    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x473427, roughness: 0.95 });
+    const trunkGeo = new THREE.CylinderGeometry(0.35, 0.65, 5.5, 12);
+    const trunk = new THREE.Mesh(trunkGeo, trunkMat);
+    trunk.position.set(0, 2.75, 0);
+    trunk.rotation.z = -0.08;
+    trunk.castShadow = true;
+    tree.add(trunk);
 
-    // Load real official DigiFormation logo images
-    this.logoImg = new Image();
-    this.logoImg.crossOrigin = "anonymous";
-    this.logoImg.src = "/assets/brand/digiformation-logo-official.png";
-
-    this.logoWhiteImg = new Image();
-    this.logoWhiteImg.crossOrigin = "anonymous";
-    this.logoWhiteImg.src = "/assets/brand/logo-white.png";
-
-    this.logoImg.onload = () => this.drawSilverLogo();
-    this.logoWhiteImg.onload = () => this.drawSilverLogo();
-
-    // Initial render
-    this.drawSilverLogo();
-
-    // 3D Physical Silver Steel Logo Plaque
-    const logoPlateGeo = new THREE.PlaneGeometry(19.0, 4.8);
-    const logoPlateMat = new THREE.MeshStandardMaterial({
-      map: this.logoTexture,
-      roughness: 0.12,
-      metalness: 0.98, // Real Silver Stainless Steel / Chrome
-      emissive: new THREE.Color(0xffffff),
-      emissiveMap: this.logoTexture,
-      emissiveIntensity: 0.5,
+    // Leafy green canopy clusters
+    const leafMat = new THREE.MeshStandardMaterial({
+      color: 0x2e7d32, // Natural lush green foliage
+      roughness: 0.75,
+      metalness: 0.05,
     });
-    this.logoMesh = new THREE.Mesh(logoPlateGeo, logoPlateMat);
-    this.logoMesh.position.set(0, buildingHeight + 1.4, 1.9);
-    this.group.add(this.logoMesh);
 
-    // Heavy-gauge Polished Stainless Steel Architectural Mounting Frame
-    const frameGeo = new THREE.BoxGeometry(19.25, 5.0, 0.3);
-    const frameMat = new THREE.MeshStandardMaterial({
-      color: 0xe2e8f0,
-      roughness: 0.1,
-      metalness: 0.98,
+    const leafOffsets = [
+      [0, 5.5, 0, 2.6],
+      [-1.2, 6.2, 0.8, 2.2],
+      [1.4, 5.8, -0.6, 2.4],
+      [0.6, 7.2, 0.4, 1.9],
+      [-1.6, 4.8, -0.8, 1.8],
+    ];
+
+    leafOffsets.forEach(([lx, ly, lz, r]) => {
+      const foliageGeo = new THREE.DodecahedronGeometry(r, 1);
+      const foliage = new THREE.Mesh(foliageGeo, leafMat);
+      foliage.position.set(lx, ly, lz);
+      foliage.castShadow = true;
+      tree.add(foliage);
     });
-    const logoFrame = new THREE.Mesh(frameGeo, frameMat);
-    logoFrame.position.set(0, buildingHeight + 1.4, 1.75);
-    this.group.add(logoFrame);
 
-    // Architectural Floodlights illuminating the Silver Logo from below
-    const spotL = new THREE.SpotLight(0xf8fafc, 4.5, 24, Math.PI / 4, 0.35);
-    spotL.position.set(-7, buildingHeight - 3, 7);
-    spotL.target = this.logoMesh;
-    this.group.add(spotL);
-
-    const spotR = new THREE.SpotLight(0xf8fafc, 4.5, 24, Math.PI / 4, 0.35);
-    spotR.position.set(7, buildingHeight - 3, 7);
-    spotR.target = this.logoMesh;
-    this.group.add(spotR);
+    this.group.add(tree);
   }
 
-  private drawSilverLogo(): void {
-    if (!this.logoCanvas || !this.logoTexture) return;
-    const ctx = this.logoCanvas.getContext("2d");
-    if (!ctx) return;
+  // Landscaped saplings with diagonal support stakes (matching photo)
+  private createSaplingWithStakes(x: number, z: number): void {
+    const sapling = new THREE.Group();
+    sapling.position.set(x, 0, z);
 
-    // Dark titanium backplate
-    ctx.fillStyle = "#070a10";
-    ctx.fillRect(0, 0, 2048, 512);
+    // Slender trunk
+    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x5c4033, roughness: 0.9 });
+    const trunkGeo = new THREE.CylinderGeometry(0.08, 0.12, 3.8, 8);
+    const trunk = new THREE.Mesh(trunkGeo, trunkMat);
+    trunk.position.set(0, 1.9, 0);
+    sapling.add(trunk);
 
-    // Brushed Silver Steel Border with Specular Highlights
-    const borderGrad = ctx.createLinearGradient(0, 0, 2048, 512);
-    borderGrad.addColorStop(0, "#94a3b8");
-    borderGrad.addColorStop(0.25, "#ffffff");
-    borderGrad.addColorStop(0.5, "#cbd5e1");
-    borderGrad.addColorStop(0.75, "#f8fafc");
-    borderGrad.addColorStop(1, "#64748b");
-    ctx.strokeStyle = borderGrad;
-    ctx.lineWidth = 12;
-    ctx.strokeRect(18, 18, 2012, 476);
-
-    // Inner Metallic Plate
-    ctx.fillStyle = "#0c111a";
-    ctx.fillRect(30, 30, 1988, 452);
-
-    // Draw real white emblem if available
-    let textStartX = 440;
-    if (this.logoWhiteImg && this.logoWhiteImg.complete && this.logoWhiteImg.naturalWidth > 0) {
-      ctx.drawImage(this.logoWhiteImg, 120, 96, 260, 260);
-      textStartX = 420;
-    } else if (this.logoImg && this.logoImg.complete && this.logoImg.naturalWidth > 0) {
-      ctx.drawImage(this.logoImg, 100, 110, 320, 180);
-      textStartX = 460;
-    } else {
-      // Procedural fallback silver geometric mark
-      ctx.save();
-      ctx.translate(220, 256);
-      ctx.strokeStyle = borderGrad;
-      ctx.lineWidth = 14;
-      ctx.beginPath();
-      for (let i = 0; i < 6; i++) {
-        const a = (Math.PI / 3) * i;
-        const px = 85 * Math.cos(a);
-        const py = 85 * Math.sin(a);
-        if (i === 0) ctx.moveTo(px, py);
-        else ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-      ctx.stroke();
-      ctx.fillStyle = "#38bdf8";
-      ctx.beginPath();
-      ctx.arc(0, 0, 24, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+    // Diagonal bamboo stakes
+    const stakeMat = new THREE.MeshStandardMaterial({ color: 0x9ca3af, roughness: 0.7 });
+    for (let i = 0; i < 3; i++) {
+      const angle = (Math.PI * 2 / 3) * i;
+      const stakeGeo = new THREE.CylinderGeometry(0.03, 0.03, 2.2, 6);
+      const stake = new THREE.Mesh(stakeGeo, stakeMat);
+      stake.position.set(Math.cos(angle) * 0.45, 1.0, Math.sin(angle) * 0.45);
+      stake.rotation.z = Math.cos(angle) * 0.28;
+      stake.rotation.x = Math.sin(angle) * 0.28;
+      sapling.add(stake);
     }
 
-    // Heavy-gauge Silver Steel Metallic Gradient for Typographic Lettering
-    const steelGrad = ctx.createLinearGradient(0, 120, 0, 390);
-    steelGrad.addColorStop(0, "#ffffff");
-    steelGrad.addColorStop(0.2, "#f1f5f9");
-    steelGrad.addColorStop(0.48, "#cbd5e1");
-    steelGrad.addColorStop(0.55, "#64748b");
-    steelGrad.addColorStop(0.72, "#94a3b8");
-    steelGrad.addColorStop(0.88, "#e2e8f0");
-    steelGrad.addColorStop(1, "#ffffff");
+    // Foliage
+    const leafMat = new THREE.MeshStandardMaterial({ color: 0x4ade80, roughness: 0.8 });
+    const foliageGeo = new THREE.DodecahedronGeometry(1.2, 1);
+    const foliage = new THREE.Mesh(foliageGeo, leafMat);
+    foliage.position.set(0, 3.6, 0);
+    foliage.castShadow = true;
+    sapling.add(foliage);
 
-    // Monolithic Brand Name: DIGIFORMATION LIMITED
-    ctx.fillStyle = steelGrad;
-    ctx.font = "900 114px 'Inter', 'Segoe UI', system-ui, sans-serif";
-    ctx.textAlign = "left";
-    ctx.shadowColor = "rgba(255, 255, 255, 0.45)";
-    ctx.shadowBlur = 16;
-    ctx.fillText("DIGIFORMATION LIMITED", textStartX, 275);
-    ctx.shadowBlur = 0;
-
-    // Sub-title Architectural Signage
-    ctx.fillStyle = "#94a3b8";
-    ctx.font = "bold 32px 'JetBrains Mono', monospace";
-    ctx.fillText("GLOBAL CORPORATE HEADQUARTERS · SOVEREIGN DIGITAL CAMPUS", textStartX, 345);
-
-    // Statutory Kicker
-    ctx.fillStyle = "#38bdf8";
-    ctx.font = "bold 24px 'JetBrains Mono', monospace";
-    ctx.fillText("ENTERPRISE FORMATIONS · 3D ARCHITECTURES · AGENTIC SYSTEMS", textStartX, 170);
-
-    this.logoTexture.needsUpdate = true;
+    this.group.add(sapling);
   }
 
-  private createBollard(x: number, z: number): void {
-    const postGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.95, 16);
-    const post = new THREE.Mesh(postGeo, this.materials.getBrushedTitanium());
-    post.position.set(x, 0.47, z);
-    this.group.add(post);
-
-    const capGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.08, 16);
-    const capMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
-    const cap = new THREE.Mesh(capGeo, capMat);
-    cap.position.set(x, 0.92, z);
-    this.group.add(cap);
-  }
-
-  private createPlanter(x: number, z: number): void {
-    const boxGeo = new THREE.BoxGeometry(1.6, 0.65, 3.2);
-    const boxMat = new THREE.MeshStandardMaterial({ color: 0x111622, roughness: 0.5, metalness: 0.3 });
-    const box = new THREE.Mesh(boxGeo, boxMat);
-    box.position.set(x, 0.32, z);
-    this.group.add(box);
-
-    const hedgeGeo = new THREE.BoxGeometry(1.4, 0.8, 3.0);
-    const hedgeMat = new THREE.MeshStandardMaterial({ color: 0x064e3b, roughness: 0.9, metalness: 0.05 });
-    const hedge = new THREE.Mesh(hedgeGeo, hedgeMat);
-    hedge.position.set(x, 0.72, z);
-    this.group.add(hedge);
-  }
-
-  public update(progress: number, delta: number): void {
+  public update(sceneProgress: number, delta: number): void {
     const time = Date.now() * 0.001;
-    if (this.logoMesh) {
-      const mat = this.logoMesh.material as THREE.MeshStandardMaterial;
-      if (mat) {
-        // Specular gleam across the silver steel logo
-        mat.emissiveIntensity = 0.42 + Math.sin(time * 1.6) * 0.08;
+    if (this.monumentLogo) this.monumentLogo.update(time);
+    if (this.crownLogo) this.crownLogo.update(time);
+
+    // Dynamic window glass transition:
+    // When progress crosses between 0.72 and 0.84, dissolve the exterior glass reflection smoothly into the interior!
+    if (this.windowGlassMesh) {
+      if (sceneProgress < 0.72) {
+        (this.windowGlassMesh.material as THREE.MeshPhysicalMaterial).opacity = 0.85;
+        this.windowGlassMesh.visible = true;
+      } else if (sceneProgress < 0.84) {
+        const t = (sceneProgress - 0.72) / 0.12;
+        (this.windowGlassMesh.material as THREE.MeshPhysicalMaterial).opacity = (1 - t) * 0.85;
+        this.windowGlassMesh.visible = true;
+      } else {
+        this.windowGlassMesh.visible = false;
       }
     }
   }
 
   public dispose(): void {
     this.canvasTextures.forEach((t) => t.dispose());
+    if (this.monumentLogo) this.monumentLogo.dispose();
+    if (this.crownLogo) this.crownLogo.dispose();
   }
 }
