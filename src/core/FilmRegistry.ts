@@ -270,9 +270,30 @@ export const FILM_LIST: FilmConfig[] = [
   FILM_REGISTRY["biz-os"],
 ];
 
+const ROUTE_ALIASES: Record<string, FilmId> = {
+  "/": "master",
+  "/uk-ltd-formation": "uk-ltd",
+  "/film/uk-ltd": "uk-ltd",
+  "/uk-ltd": "uk-ltd",
+  "/us-llc-formation": "us-llc",
+  "/film/us-llc": "us-llc",
+  "/us-llc": "us-llc",
+  "/company-compliance": "compliance",
+  "/film/compliance": "compliance",
+  "/compliance": "compliance",
+  "/digital-build": "digital-build",
+  "/film/digital-build": "digital-build",
+  "/digi-biz-os": "biz-os",
+  "/film/digi-biz-os": "biz-os",
+  "/biz-os": "biz-os",
+};
+
 export function getFilmByRoute(pathname: string): FilmConfig {
   const trimmed = pathname.trim().replace(/\/+$/, "");
   const normalized = trimmed === "" ? "/" : trimmed;
+  if (ROUTE_ALIASES[normalized]) {
+    return FILM_REGISTRY[ROUTE_ALIASES[normalized]] || FILM_REGISTRY.master;
+  }
   const found = FILM_LIST.find((f) => f.route === normalized);
   return found || FILM_REGISTRY.master;
 }

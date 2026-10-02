@@ -26,13 +26,13 @@ export const CinemaSEO: React.FC<CinemaSEOProps> = ({ film }) => {
       canonical.setAttribute("rel", "canonical");
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute("href", `https://digiformation.com${film.route}`);
+    canonical.setAttribute("href", `https://www.digiformation.co.uk${film.route}`);
 
     // Open Graph Tags
     const ogTags: Record<string, string> = {
       "og:title": film.seoTitle,
       "og:description": film.seoDescription,
-      "og:url": `https://digiformation.com${film.route}`,
+      "og:url": `https://www.digiformation.co.uk${film.route}`,
       "og:site_name": "DigiFormation",
       "og:type": "website",
     };
