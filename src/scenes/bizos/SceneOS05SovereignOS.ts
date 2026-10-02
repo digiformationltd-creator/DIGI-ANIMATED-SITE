@@ -47,6 +47,8 @@ export class SceneOS05SovereignOS implements CinematicScene {
   private ctaMesh: THREE.Mesh | null = null;
   private materials = MaterialFactory.getInstance();
 
+  private hatLogo: HTMLImageElement | null = null;
+
   constructor() {
     this.canvas = document.createElement("canvas");
     this.canvas.width = 2048;
@@ -54,6 +56,16 @@ export class SceneOS05SovereignOS implements CinematicScene {
     this.canvasTexture = new THREE.CanvasTexture(this.canvas);
     this.canvasTexture.colorSpace = THREE.SRGBColorSpace;
     this.renderCanvas();
+
+    // Load official Fedora Hat Logo
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = "/assets/brand/digibiz-hat-logo.png";
+    img.onload = () => {
+      this.hatLogo = img;
+      this.renderCanvas();
+      this.canvasTexture.needsUpdate = true;
+    };
   }
 
   public setup(threeScene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
@@ -119,10 +131,15 @@ export class SceneOS05SovereignOS implements CinematicScene {
     ctx.textAlign = "center";
     ctx.fillText("DIGIFORMATION · DIGI BIZ OS PRODUCTION", w / 2, 75);
 
-    // Title Headline
+    // Title Headline with Official Fedora Hat Logos
     ctx.fillStyle = "#ffffff";
     ctx.font = "900 50px sans-serif";
     ctx.fillText("DIGI BIZ OS", w / 2, 165);
+
+    if (this.hatLogo) {
+      ctx.drawImage(this.hatLogo, w / 2 - 240, 118, 56, 56);
+      ctx.drawImage(this.hatLogo, w / 2 + 184, 118, 56, 56);
+    }
 
     ctx.fillStyle = "#fbbf24";
     ctx.font = "20px monospace";

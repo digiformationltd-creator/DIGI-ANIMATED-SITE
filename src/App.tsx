@@ -4,6 +4,7 @@ import { PerformanceMonitor } from "./core/PerformanceMonitor";
 import { AudioAtmosphereEngine } from "./core/AudioAtmosphereEngine";
 import { FILM_REGISTRY, FILM_LIST, getFilmByRoute, getFilmById } from "./core/FilmRegistry";
 import { CinemaViewport } from "./components/CinemaViewport";
+import { RealisticCinemaEngine } from "./components/RealisticCinemaEngine";
 import { CinemaOverlay } from "./components/CinemaOverlay";
 import { CinemaNavigation } from "./components/CinemaNavigation";
 import { FilmTimelineIndicator } from "./components/FilmTimelineIndicator";
@@ -137,8 +138,15 @@ export function App() {
       {/* Cinematic Asset Loader */}
       <CinematicLoader ready={ready} progressPercent={loadPercent} />
 
-      {/* Fixed Fullscreen Cinema Canvas Viewport (Shared WebGL Renderer) */}
-      <div className="fixed inset-0 z-0 w-full h-full pointer-events-none">
+      {/* 1. Underlying Photorealistic Cinema Engine (Real Camera Documentary Film Plate) */}
+      <RealisticCinemaEngine
+        progress={smoothProgress}
+        film={currentFilm}
+        onReady={() => setReady(true)}
+      />
+
+      {/* 2. Fixed Fullscreen Cinema Canvas Viewport (Shared WebGL Interactive 3D Overlay) */}
+      <div className="fixed inset-0 z-10 w-full h-full pointer-events-none">
         <CinemaViewport
           progress={progress}
           smoothProgress={smoothProgress}

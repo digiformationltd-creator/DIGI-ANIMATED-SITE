@@ -146,7 +146,7 @@ export class SceneMasterPortals implements CinematicScene {
         tag: "5 REELS",
         color: "#fbbf24",
         badge: "AUTONOMOUS OPS",
-        heroSrc: "/assets/heroes/card-hero-banking.jpg",
+        heroSrc: "/assets/brand/digibiz-hat-logo.png",
       },
     ];
 
@@ -394,23 +394,14 @@ export class SceneMasterPortals implements CinematicScene {
   public update(sceneProgress: number, globalProgress: number, delta: number): void {
     const time = Date.now() * 0.001;
 
-    // Update dynamic background tone depending on altitude and environment
+    // Transparent background allowing RealisticCinemaEngine to display real documentary plates
     if (this.threeScene) {
-      if (sceneProgress < 0.70) {
-        this.threeScene.background = new THREE.Color(0x60a5fa); // Bright daylight sky blue matching campus photo
-      } else {
-        this.threeScene.background = new THREE.Color(0x0b1120); // Executive office interior
-      }
+      this.threeScene.background = null;
     }
 
-    // Update Campus & Building Lights / Window Opacity
-    this.headquarters.update(sceneProgress, delta);
-
-    // Update Office Interior (Director posture, interior silver logo)
-    this.officeInterior.update(time);
-
-    // Layer Visibility Management: Headquarters is visible from 0.00!
-    this.headquarters.getGroup().visible = true;
+    // Realistic Cinema Engine displays the authentic corporate campus photo plate!
+    // Procedural Three.js boxes/cylinders are hidden so they don't cover the real photo with cartoon blocks
+    this.headquarters.getGroup().visible = false;
     if (sceneProgress < 0.65) {
       this.officeInterior.getGroup().visible = false;
       this.portalsGroup.visible = false;

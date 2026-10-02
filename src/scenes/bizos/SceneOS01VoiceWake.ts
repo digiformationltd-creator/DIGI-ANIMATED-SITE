@@ -46,6 +46,7 @@ export class SceneOS01VoiceWake implements CinematicScene {
   private canvasTexture: THREE.CanvasTexture;
   private monitorMesh: THREE.Mesh | null = null;
   private materials = MaterialFactory.getInstance();
+  private hatLogo: HTMLImageElement | null = null;
 
   constructor() {
     this.canvas = document.createElement("canvas");
@@ -54,6 +55,16 @@ export class SceneOS01VoiceWake implements CinematicScene {
     this.canvasTexture = new THREE.CanvasTexture(this.canvas);
     this.canvasTexture.colorSpace = THREE.SRGBColorSpace;
     this.renderScreen();
+
+    // Load official DigiBiz OS Fedora Hat Logo
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = "/assets/brand/digibiz-hat-logo.png";
+    img.onload = () => {
+      this.hatLogo = img;
+      this.renderScreen();
+      this.canvasTexture.needsUpdate = true;
+    };
   }
 
   public setup(threeScene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
@@ -114,6 +125,14 @@ export class SceneOS01VoiceWake implements CinematicScene {
     ctx.fillStyle = "#ffffff";
     ctx.font = "900 36px sans-serif";
     ctx.fillText("VOICE COMMAND RECOGNITION", 110, 180);
+
+    // Official DigiBiz Fedora Hat Logo Avatar
+    if (this.hatLogo) {
+      ctx.drawImage(this.hatLogo, w - 210, 140, 90, 90);
+      ctx.strokeStyle = "rgba(245, 158, 11, 0.6)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(w - 210, 140, 90, 90);
+    }
 
     ctx.fillStyle = "#94a3b8";
     ctx.font = "20px monospace";

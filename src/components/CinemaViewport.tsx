@@ -52,9 +52,7 @@ export const CinemaViewport: React.FC<CinemaViewportProps> = ({
     // 1. Initialize Scene & Perspective Camera
     const scene = new THREE.Scene();
     sceneRef.current = scene;
-    scene.background = new THREE.Color(
-      filmRef.current.id === "master" ? 0x60a5fa : 0x080d1a
-    );
+    scene.background = null; // Transparent background allowing RealisticCinemaEngine to display real documentary plates
 
     // Persistent Executive Workspace (Grounding all service films in executive suite)
     const persistentWorkspace = new ProceduralWorkspace();
@@ -72,13 +70,13 @@ export const CinemaViewport: React.FC<CinemaViewportProps> = ({
     const cameraController = new CinematicCameraController(camera);
     cameraControllerRef.current = cameraController;
 
-    // 2. Initialize WebGLRenderer with ACES Filmic Tone Mapping
+    // 2. Initialize WebGLRenderer with ACES Filmic Tone Mapping and alpha transparency
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({
         powerPreference: "high-performance",
         antialias: qualityTier !== "LOW",
-        alpha: false,
+        alpha: true,
         stencil: false,
         depth: true,
       });
@@ -200,9 +198,7 @@ export const CinemaViewport: React.FC<CinemaViewportProps> = ({
       persistentWorkspaceRef.current.getGroup().visible = film.id !== "master";
     }
     if (sceneRef.current) {
-      sceneRef.current.background = film.id === "master"
-        ? new THREE.Color(0x60a5fa)
-        : new THREE.Color(0x080d1a);
+      sceneRef.current.background = null;
     }
 
     sceneManager.clearScenes();

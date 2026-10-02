@@ -74,6 +74,7 @@ export const CinemaNavigation: React.FC<CinemaNavigationProps> = ({
         <div className="h-3 w-px bg-white/10 mx-1" />
         {navFilms.map((f) => {
           const isActive = currentFilm.id === f.id;
+          const isBizOs = f.id === "biz-os";
           return (
             <button
               key={f.id}
@@ -84,7 +85,15 @@ export const CinemaNavigation: React.FC<CinemaNavigationProps> = ({
                   : "text-slate-400 hover:text-white hover:bg-white/5"
               }`}
             >
-              <span className={isActive ? "text-slate-600" : "text-slate-500"}>{f.num}</span>
+              {isBizOs ? (
+                <img
+                  src="/assets/brand/digibiz-hat-logo.png"
+                  alt="Digi Biz OS"
+                  className="w-3.5 h-3.5 rounded-full object-cover border border-amber-400/50 shadow-sm"
+                />
+              ) : (
+                <span className={isActive ? "text-slate-600" : "text-slate-500"}>{f.num}</span>
+              )}
               <span>{f.label}</span>
             </button>
           );
@@ -122,11 +131,18 @@ export const CinemaNavigation: React.FC<CinemaNavigationProps> = ({
                   onSelectFilm(f.id);
                   setMenuOpen(false);
                 }}
-                className={`px-3 py-2 text-left text-xs font-mono transition ${
+                className={`flex items-center gap-2 px-3 py-2 text-left text-xs font-mono transition ${
                   currentFilm.id === f.id ? "text-white bg-white/10 font-bold" : "text-slate-400 hover:text-white"
                 }`}
               >
-                {f.num} · {f.label}
+                {f.id === "biz-os" && (
+                  <img
+                    src="/assets/brand/digibiz-hat-logo.png"
+                    alt="Digi Biz OS"
+                    className="w-4 h-4 rounded-full object-cover border border-amber-400/50"
+                  />
+                )}
+                <span>{f.num} · {f.label}</span>
               </button>
             ))}
           </div>

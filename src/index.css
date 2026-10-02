@@ -101,3 +101,201 @@ html, body {
   z-index: 37;
   background: radial-gradient(circle at center, transparent 40%, rgba(8, 10, 14, 0.72) 100%);
 }
+
+/* ====================================================
+   PHOTOREALISTIC CINEMA ENGINE STYLES (TEA SITE METHOD)
+   ==================================================== */
+.realistic-cinema-engine {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  overflow: hidden;
+  background: #06090f;
+  animation: camera-breath 14s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes camera-breath {
+  0%, 100% {
+    transform: scale(1) translate(0, 0);
+  }
+  33% {
+    transform: scale(1.006) translate(-0.12%, 0.08%);
+  }
+  66% {
+    transform: scale(1.003) translate(0.1%, -0.06%);
+  }
+}
+
+.cinema-plate-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.4s ease-out;
+  will-change: transform, opacity;
+}
+
+.cinema-still-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 60%;
+  filter: contrast(1.05) saturate(1.02) brightness(0.98);
+}
+
+/* 35mm Photochemical Film Grain Simulation */
+.cinema-film-grain {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  animation: film-grain-shift 0.4s steps(4) infinite;
+  mix-blend-mode: overlay;
+}
+
+@keyframes film-grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3%, -2%); }
+  50% { transform: translate(2%, 3%); }
+  75% { transform: translate(-2%, 2%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Anamorphic Cine Lens Peripheral Vignette */
+.cinema-anamorphic-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(4, 7, 12, 0.48) 88%, rgba(2, 4, 8, 0.82) 100%),
+    linear-gradient(180deg, rgba(6, 10, 16, 0.4) 0%, transparent 14%, transparent 86%, rgba(6, 10, 16, 0.55) 100%);
+}
+
+/* Cinema Camera Telemetry HUD */
+.cinema-hud {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  pointer-events: none;
+  padding: clamp(24px, 4.5vh, 60px) clamp(16px, 3vw, 40px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cinema-hud-top-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  width: fit-content;
+}
+
+.cinema-rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  animation: rec-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes rec-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.cinema-rec-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  color: #ef4444;
+  letter-spacing: 0.1em;
+}
+
+.cinema-timecode {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  margin-left: 4px;
+}
+
+.cinema-hud-top-right {
+  position: absolute;
+  top: clamp(24px, 4.5vh, 60px);
+  right: clamp(16px, 3vw, 40px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  padding: 4px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.cinema-hud-spec {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #94a3b8;
+  letter-spacing: 0.06em;
+}
+
+.cinema-hud-bottom-right {
+  position: absolute;
+  bottom: clamp(28px, 5vh, 68px);
+  right: clamp(16px, 3vw, 40px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.cinema-audio-btn,
+.cinema-hud-toggle,
+.cinema-hud-restore-btn {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #cbd5e1;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cinema-audio-btn:hover,
+.cinema-hud-toggle:hover,
+.cinema-hud-restore-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.cinema-hud-restore-btn {
+  position: fixed;
+  bottom: clamp(28px, 5vh, 68px);
+  right: clamp(16px, 3vw, 40px);
+  z-index: 36;
+  pointer-events: auto;
+}
+
