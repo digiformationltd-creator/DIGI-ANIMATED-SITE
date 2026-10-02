@@ -76,16 +76,16 @@ export const CinemaOverlay: React.FC<CinemaOverlayProps> = ({
       <div className="cinema-vignette" aria-hidden="true" />
 
       {/* Narrative Storytelling Layer (Bottom Left) */}
-      <div className="fixed bottom-14 sm:bottom-20 left-4 sm:left-8 md:left-14 max-w-sm sm:max-w-xl z-30 pointer-events-none select-none transition-all duration-500">
-        <div className="inline-flex items-center gap-2 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[10px] sm:text-[11px] font-mono text-slate-300 uppercase tracking-widest mb-2 sm:mb-3">
+      <div className="fixed bottom-14 sm:bottom-20 left-4 sm:left-8 md:left-14 max-w-[calc(100vw-2rem)] sm:max-w-xl z-30 pointer-events-none select-none transition-all duration-500">
+        <div className="inline-flex items-center gap-2 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[10px] sm:text-[11px] font-mono text-slate-300 uppercase tracking-widest mb-1.5 sm:mb-3">
           {kicker}
         </div>
 
-        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold font-display tracking-tight text-white drop-shadow-md mb-2 sm:mb-3">
+        <h1 className="text-xl sm:text-3xl md:text-5xl font-bold font-display tracking-tight text-white drop-shadow-md mb-1.5 sm:mb-3">
           {title}
         </h1>
 
-        <p className="text-xs sm:text-sm md:text-base text-slate-300 leading-relaxed font-sans mb-2 sm:mb-3 drop-shadow line-clamp-3 sm:line-clamp-none">
+        <p className="text-xs sm:text-sm md:text-base text-slate-300 leading-relaxed font-sans mb-1.5 sm:mb-3 drop-shadow line-clamp-2 sm:line-clamp-none">
           {description}
         </p>
 

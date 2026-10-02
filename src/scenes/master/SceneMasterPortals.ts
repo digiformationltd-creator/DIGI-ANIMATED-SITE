@@ -36,14 +36,14 @@ export class SceneMasterPortals implements CinematicScene {
 
   public cameraWaypoints = {
     start: {
-      position: [0.0, 18.0, 36.0] as [number, number, number],
-      target: [0.0, 14.5, 0.0] as [number, number, number],
-      fov: 48,
+      position: [0.0, 16.0, 32.0] as [number, number, number],
+      target: [0.0, 13.5, 0.0] as [number, number, number],
+      fov: 46,
     },
     end: {
-      position: [0.0, 1.55, 3.2] as [number, number, number],
+      position: [0.0, 1.55, 3.6] as [number, number, number],
       target: [0.0, 1.15, -0.2] as [number, number, number],
-      fov: 34,
+      fov: 36,
     },
   };
 
@@ -61,10 +61,10 @@ export class SceneMasterPortals implements CinematicScene {
   }
 
   public setup(threeScene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
-    // 1. Add Google-style Monumental Corporate Headquarters Campus
+    // 1. Add Photorealistic Corporate Headquarters Building & Campus
     this.sceneGroup.add(this.headquarters.getGroup());
 
-    // 2. Add Interior Executive Office Suite (Situated inside behind glass entrance)
+    // 2. Add Interior Executive Office Suite
     this.buildExecutiveOffice();
     this.sceneGroup.add(this.officeGroup);
 
@@ -73,82 +73,89 @@ export class SceneMasterPortals implements CinematicScene {
   }
 
   private buildExecutiveOffice(): void {
-    // A. Executive Dark Walnut Floor inside office (Width: 26m, Depth: 16m)
-    const floorGeo = new THREE.PlaneGeometry(26, 16);
+    // A. Executive Dark Granite & Walnut Floor inside office
+    const floorGeo = new THREE.PlaneGeometry(24, 16);
     const floorMat = this.materials.getDarkFloorTile();
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI / 2;
-    floor.position.set(0, 0.02, -5);
+    floor.position.set(0, 0.02, -4);
     floor.receiveShadow = true;
     this.officeGroup.add(floor);
 
-    // B. Executive Cantilever Desk in Center of Office
+    // B. Executive Cantilever Desk in Office Center
     const desk = new THREE.Group();
-    desk.position.set(0, 0, 0.4);
+    desk.position.set(0, 0, 0.5);
 
-    // Dark walnut tabletop with titanium trim
-    const topGeo = new THREE.BoxGeometry(2.4, 0.06, 1.1);
+    // Dark walnut tabletop with brushed titanium perimeter
+    const topGeo = new THREE.BoxGeometry(2.1, 0.05, 0.95);
     const topMesh = new THREE.Mesh(topGeo, this.materials.getDarkWalnutWood());
-    topMesh.position.set(0, 0.74, 0);
+    topMesh.position.set(0, 0.72, 0);
     topMesh.castShadow = true;
     desk.add(topMesh);
 
-    const trimGeo = new THREE.BoxGeometry(2.42, 0.02, 1.12);
+    const trimGeo = new THREE.BoxGeometry(2.12, 0.02, 0.97);
     const trimMesh = new THREE.Mesh(trimGeo, this.materials.getBrushedTitanium());
-    trimMesh.position.set(0, 0.73, 0);
+    trimMesh.position.set(0, 0.71, 0);
     desk.add(trimMesh);
 
-    // Cantilever Legs
-    const legGeo = new THREE.BoxGeometry(0.06, 0.72, 0.95);
+    // Matte black legs
+    const legGeo = new THREE.BoxGeometry(0.06, 0.7, 0.85);
     const legMat = this.materials.getMatteBlackMetal();
     const lLeg = new THREE.Mesh(legGeo, legMat);
-    lLeg.position.set(-1.05, 0.36, 0);
+    lLeg.position.set(-0.95, 0.35, 0);
     desk.add(lLeg);
 
     const rLeg = new THREE.Mesh(legGeo, legMat);
-    rLeg.position.set(1.05, 0.36, 0);
+    rLeg.position.set(0.95, 0.35, 0);
     desk.add(rLeg);
 
-    // Leather Mat on Desk
-    const matGeo = new THREE.BoxGeometry(1.3, 0.005, 0.55);
+    // Leather Runner Mat
+    const matGeo = new THREE.BoxGeometry(1.2, 0.005, 0.5);
     const matMesh = new THREE.Mesh(matGeo, this.materials.getLeatherDeskMat());
-    matMesh.position.set(0, 0.772, 0.08);
+    matMesh.position.set(0, 0.748, 0.08);
     desk.add(matMesh);
 
-    // Sleek Studio Display on Desk
-    const dispGeo = new THREE.PlaneGeometry(0.75, 0.45);
+    // Sleek Desktop Studio Display (Compact, safe height Y = 0.98m)
+    const dispGeo = new THREE.PlaneGeometry(0.68, 0.38);
     const dispCanvas = document.createElement("canvas");
     dispCanvas.width = 1024;
-    dispCanvas.height = 600;
+    dispCanvas.height = 576;
     const dCtx = dispCanvas.getContext("2d");
     if (dCtx) {
-      dCtx.fillStyle = "#090d16";
-      dCtx.fillRect(0, 0, 1024, 600);
-      dCtx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+      dCtx.fillStyle = "#070b14";
+      dCtx.fillRect(0, 0, 1024, 576);
+      dCtx.strokeStyle = "rgba(56, 189, 248, 0.5)";
       dCtx.lineWidth = 4;
-      dCtx.strokeRect(10, 10, 1004, 580);
+      dCtx.strokeRect(12, 12, 1000, 552);
 
       dCtx.fillStyle = "#38bdf8";
-      dCtx.font = "bold 28px monospace";
-      dCtx.fillText("DIGIFORMATION OPERATING SYSTEM", 50, 70);
+      dCtx.font = "bold 26px monospace";
+      dCtx.fillText("DIGIFORMATION OPERATING SYSTEM", 50, 65);
 
       dCtx.fillStyle = "#ffffff";
-      dCtx.font = "900 42px sans-serif";
-      dCtx.fillText("EXECUTIVE SUITE ACTIVE", 50, 140);
+      dCtx.font = "900 38px 'Inter', sans-serif";
+      dCtx.fillText("EXECUTIVE COMMAND SUITE", 50, 130);
 
       dCtx.fillStyle = "#94a3b8";
-      dCtx.font = "24px sans-serif";
-      dCtx.fillText("5 ENTERPRISE PATHWAYS SYNCHRONIZED", 50, 200);
+      dCtx.font = "22px sans-serif";
+      dCtx.fillText("5 ENTERPRISE PATHWAYS FULLY SYNCHRONIZED", 50, 185);
 
-      // Mini status bars
-      ["UK LTD · READY", "US LLC · READY", "COMPLIANCE · ACTIVE", "DIGITAL BUILD · EDGE", "BIZ OS · AUTONOMOUS"].forEach((txt, i) => {
-        dCtx.fillStyle = "rgba(255, 255, 255, 0.08)";
-        dCtx.fillRect(50, 260 + i * 55, 924, 40);
+      const items = [
+        "01 UK LTD FORMATION · COMPANIES HOUSE GATEWAY",
+        "02 US LLC FORMATION · WYOMING · IRS RAILS",
+        "03 COMPANY COMPLIANCE · STATUTORY CONFIRMATION",
+        "04 DIGITAL BUILD · 3D WEBGL & AGENTIC FORGE",
+        "05 DIGI BIZ OS · 700+ AGENTS AUTONOMOUS PLATFORM",
+      ];
+      items.forEach((txt, idx) => {
+        dCtx.fillStyle = "rgba(255, 255, 255, 0.06)";
+        dCtx.fillRect(50, 235 + idx * 58, 924, 46);
         dCtx.fillStyle = "#38bdf8";
-        dCtx.font = "bold 20px monospace";
-        dCtx.fillText(`● ${txt}`, 70, 288 + i * 55);
+        dCtx.font = "bold 18px monospace";
+        dCtx.fillText(`● ${txt}`, 70, 265 + idx * 58);
       });
     }
+
     const dispTexture = new THREE.CanvasTexture(dispCanvas);
     dispTexture.colorSpace = THREE.SRGBColorSpace;
     this.canvasTextures.push(dispTexture);
@@ -157,228 +164,263 @@ export class SceneMasterPortals implements CinematicScene {
       map: dispTexture,
       emissive: new THREE.Color(0xffffff),
       emissiveMap: dispTexture,
-      emissiveIntensity: 0.8,
+      emissiveIntensity: 0.75,
       roughness: 0.15,
       metalness: 0.1,
     });
     const dispMesh = new THREE.Mesh(dispGeo, dispMat);
-    dispMesh.position.set(0, 1.05, -0.15);
+    dispMesh.position.set(0, 0.98, -0.15);
     desk.add(dispMesh);
 
     // Bezel for display
-    const bezelGeo = new THREE.BoxGeometry(0.77, 0.47, 0.02);
+    const bezelGeo = new THREE.BoxGeometry(0.7, 0.4, 0.02);
     const bezel = new THREE.Mesh(bezelGeo, this.materials.getAnodizedAluminum());
-    bezel.position.set(0, 1.05, -0.162);
+    bezel.position.set(0, 0.98, -0.162);
     desk.add(bezel);
 
     this.deskMesh = desk;
     this.officeGroup.add(desk);
 
-    // C. Center Architectural Monolith (Behind Desk)
-    const monolithGeo = new THREE.BoxGeometry(0.8, 3.8, 0.8);
-    const monolithMat = new THREE.MeshStandardMaterial({
-      color: 0x0f172a,
-      roughness: 0.1,
-      metalness: 0.9,
-    });
-    const monolith = new THREE.Mesh(monolithGeo, monolithMat);
-    monolith.position.set(0, 1.9, -3.2);
-    this.officeGroup.add(monolith);
-
-    // D. Glowing Title Plaque in Mid-Air
+    // C. Glowing Title Plaque (Perfect Screen-Safe Dimensions & Height)
+    // Width 2.3m, Height 0.38m, Position Y = 1.88m (Well inside top letterbox)
     const titleCanvas = document.createElement("canvas");
     titleCanvas.width = 1600;
-    titleCanvas.height = 400;
+    titleCanvas.height = 320;
     const tCtx = titleCanvas.getContext("2d");
     if (tCtx) {
-      tCtx.fillStyle = "rgba(7, 9, 12, 0.95)";
-      tCtx.fillRect(0, 0, 1600, 400);
+      tCtx.fillStyle = "rgba(7, 10, 16, 0.95)";
+      tCtx.fillRect(0, 0, 1600, 320);
 
-      tCtx.strokeStyle = "rgba(255, 255, 255, 0.15)";
-      tCtx.lineWidth = 2;
-      tCtx.strokeRect(10, 10, 1580, 380);
+      tCtx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+      tCtx.lineWidth = 3;
+      tCtx.strokeRect(10, 10, 1580, 300);
 
       tCtx.fillStyle = "#38bdf8";
-      tCtx.font = "bold 22px monospace";
+      tCtx.font = "bold 20px monospace";
       tCtx.textAlign = "center";
-      tCtx.fillText("DIGIFORMATION CINEMATIC ECOSYSTEM", 800, 65);
+      tCtx.fillText("DIGIFORMATION CINEMATIC ECOSYSTEM", 800, 52);
 
       tCtx.fillStyle = "#ffffff";
-      tCtx.font = "900 46px sans-serif";
-      tCtx.fillText("BUILD YOUR BUSINESS.", 800, 140);
-      tCtx.fillText("BUILD YOUR DIGITAL FUTURE.", 800, 205);
+      tCtx.font = "900 42px 'Inter', sans-serif";
+      tCtx.fillText("BUILD YOUR BUSINESS. BUILD YOUR DIGITAL FUTURE.", 800, 125);
 
       tCtx.fillStyle = "#94a3b8";
-      tCtx.font = "20px sans-serif";
-      tCtx.fillText("FIVE INTEGRATED CINEMATIC REELS · SELECT A PATHWAY BELOW", 800, 275);
+      tCtx.font = "18px sans-serif";
+      tCtx.fillText("FIVE INTEGRATED CINEMATIC REELS · SELECT A PATHWAY BELOW", 800, 185);
     }
     const tTexture = new THREE.CanvasTexture(titleCanvas);
     tTexture.colorSpace = THREE.SRGBColorSpace;
     this.canvasTextures.push(tTexture);
 
-    const titleGeo = new THREE.PlaneGeometry(3.6, 0.9);
+    const titleGeo = new THREE.PlaneGeometry(2.3, 0.38);
     const titleMat = new THREE.MeshStandardMaterial({
       map: tTexture,
-      emissive: 0xffffff,
+      emissive: new THREE.Color(0xffffff),
       emissiveMap: tTexture,
       emissiveIntensity: 0.85,
-      roughness: 0.2,
+      roughness: 0.15,
       metalness: 0.1,
     });
     this.titleMesh = new THREE.Mesh(titleGeo, titleMat);
-    this.titleMesh.position.set(0, 2.7, -1.2);
+    this.titleMesh.position.set(0, 1.88, -0.8);
     this.officeGroup.add(this.titleMesh);
 
-    // E. Five Spatial Portals / Processes inside the Office
+    // D. Five Spatial Process Stations (Screen-Safe Dimensions & Alignment)
+    // Width 0.46m each, Spacing 0.52m -> Total span 2.54m (Safely within ±1.35m)
     const films = [
       {
         num: "01",
-        title: "UK LTD FORMATION",
-        sub: "Companies House · HMRC · Banking",
-        tag: "10 CHAPTERS",
+        title: "UK LTD",
+        fullTitle: "UK LTD FORMATION",
+        sub: "Companies House & HMRC",
+        tag: "10 REELS",
         color: "#38bdf8",
-        badge: "ENGLISH COMMON LAW",
+        badge: "ENGLISH LAW",
+        heroSrc: "/assets/heroes/card-hero-uk-ltd.jpg",
       },
       {
         num: "02",
-        title: "US LLC FORMATION",
-        sub: "Wyoming · IRS EIN · Domestic ACH",
-        tag: "9 CHAPTERS",
+        title: "US LLC",
+        fullTitle: "US LLC FORMATION",
+        sub: "Wyoming & IRS EIN Rails",
+        tag: "9 REELS",
         color: "#60a5fa",
-        badge: "AMERICAN JURISDICTION",
+        badge: "US JURISDICTION",
+        heroSrc: "/assets/heroes/card-hero-us-llc.jpg",
       },
       {
         num: "03",
-        title: "COMPANY COMPLIANCE",
-        sub: "Confirmation Statements · Accounts · AD01",
-        tag: "5 CHAPTERS",
+        title: "COMPLIANCE",
+        fullTitle: "COMPANY COMPLIANCE",
+        sub: "Statutory Filings & Accounts",
+        tag: "5 REELS",
         color: "#34d399",
         badge: "GOOD STANDING",
+        heroSrc: "/assets/heroes/card-hero-tax.jpg",
       },
       {
         num: "04",
         title: "DIGITAL BUILD",
-        sub: "2D Web · 3D WebGL · Agentic Software",
-        tag: "5 CHAPTERS",
+        fullTitle: "DIGITAL PRODUCT SUITE",
+        sub: "3D Web & Agentic Software",
+        tag: "5 REELS",
         color: "#a855f7",
-        badge: "DIGITAL PRODUCT SUITE",
+        badge: "SOFTWARE FORGE",
+        heroSrc: "/assets/heroes/card-hero-web.jpg",
       },
       {
         num: "05",
-        title: "DIGI BIZ OS",
-        sub: "Voice Operating System · 700+ Agents",
-        tag: "5 CHAPTERS",
+        title: "BIZ OS",
+        fullTitle: "DIGI BIZ OS",
+        sub: "Voice OS & 700+ Agents",
+        tag: "5 REELS",
         color: "#f59e0b",
-        badge: "ENTERPRISE AUTONOMY",
+        badge: "AUTONOMOUS OPS",
+        heroSrc: "/assets/heroes/card-hero-banking.jpg",
       },
     ];
 
-    const portalWidth = 0.95;
-    const portalHeight = 1.55;
-    const spacing = 1.3;
+    const cardWidth = 0.46;
+    const cardHeight = 0.88;
+    const spacing = 0.52;
     const startX = -((films.length - 1) * spacing) / 2;
 
     films.forEach((film, idx) => {
       const pCanvas = document.createElement("canvas");
-      pCanvas.width = 800;
-      pCanvas.height = 1280;
+      pCanvas.width = 640;
+      pCanvas.height = 1100;
       const ctx = pCanvas.getContext("2d");
-      if (ctx) {
-        const grad = ctx.createLinearGradient(0, 0, 0, 1280);
-        grad.addColorStop(0, "#0f172a");
-        grad.addColorStop(1, "#020617");
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, 800, 1280);
-
-        ctx.strokeStyle = film.color;
-        ctx.lineWidth = 6;
-        ctx.strokeRect(16, 16, 768, 1248);
-
-        ctx.fillStyle = film.color;
-        ctx.font = "bold 64px monospace";
-        ctx.textAlign = "left";
-        ctx.fillText(film.num, 50, 110);
-
-        ctx.fillStyle = "#64748b";
-        ctx.font = "bold 22px monospace";
-        ctx.textAlign = "right";
-        ctx.fillText(film.tag, 750, 95);
-
-        ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
-        ctx.beginPath();
-        ctx.roundRect(50, 150, 360, 48, 24);
-        ctx.fill();
-        ctx.fillStyle = film.color;
-        ctx.font = "bold 18px monospace";
-        ctx.textAlign = "left";
-        ctx.fillText(`● ${film.badge}`, 75, 182);
-
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "900 48px sans-serif";
-        ctx.fillText(film.title, 50, 310);
-
-        ctx.fillStyle = "#94a3b8";
-        ctx.font = "26px sans-serif";
-        ctx.fillText(film.sub, 50, 370);
-
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
-        ctx.lineWidth = 2;
-        for (let i = 0; i < 8; i++) {
-          ctx.beginPath();
-          ctx.arc(400, 680, 60 + i * 36, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-
-        ctx.fillStyle = film.color;
-        ctx.beginPath();
-        ctx.arc(400, 680, 24, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
-        ctx.beginPath();
-        ctx.roundRect(50, 1050, 700, 150, 20);
-        ctx.fill();
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
-        ctx.stroke();
-
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 30px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText("ENTER CINEMATIC FILM →", 400, 1135);
-
-        ctx.fillStyle = "#64748b";
-        ctx.font = "20px monospace";
-        ctx.fillText("DIGIFORMATION PRODUCTION", 400, 1175);
-      }
 
       const pTexture = new THREE.CanvasTexture(pCanvas);
       pTexture.colorSpace = THREE.SRGBColorSpace;
       this.canvasTextures.push(pTexture);
 
-      const pGeo = new THREE.PlaneGeometry(portalWidth, portalHeight);
+      const renderCard = (heroImage?: HTMLImageElement) => {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, 640, 1100);
+
+        // Dark slate backdrop
+        ctx.fillStyle = "#090d16";
+        ctx.fillRect(0, 0, 640, 1100);
+
+        // Real Hero Photograph (if loaded)
+        if (heroImage && heroImage.complete && heroImage.naturalWidth > 0) {
+          ctx.drawImage(heroImage, 0, 0, 640, 360);
+          // Dark gradient vignette overlay on photo bottom
+          const photoGrad = ctx.createLinearGradient(0, 200, 0, 360);
+          photoGrad.addColorStop(0, "rgba(9, 13, 22, 0.0)");
+          photoGrad.addColorStop(1, "rgba(9, 13, 22, 1.0)");
+          ctx.fillStyle = photoGrad;
+          ctx.fillRect(0, 200, 640, 160);
+        } else {
+          // Fallback sleek geometric hero area
+          const hGrad = ctx.createLinearGradient(0, 0, 0, 360);
+          hGrad.addColorStop(0, "#1e293b");
+          hGrad.addColorStop(1, "#090d16");
+          ctx.fillStyle = hGrad;
+          ctx.fillRect(0, 0, 640, 360);
+        }
+
+        // Card Frame with Brand Color
+        ctx.strokeStyle = film.color;
+        ctx.lineWidth = 5;
+        ctx.strokeRect(10, 10, 620, 1080);
+
+        // Top Reel Number & Tag
+        ctx.fillStyle = film.color;
+        ctx.font = "bold 56px monospace";
+        ctx.textAlign = "left";
+        ctx.fillText(film.num, 40, 430);
+
+        ctx.fillStyle = "#64748b";
+        ctx.font = "bold 20px monospace";
+        ctx.textAlign = "right";
+        ctx.fillText(film.tag, 600, 420);
+
+        // Badge Pill
+        ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+        ctx.beginPath();
+        ctx.roundRect(40, 470, 320, 42, 21);
+        ctx.fill();
+        ctx.fillStyle = film.color;
+        ctx.font = "bold 16px monospace";
+        ctx.textAlign = "left";
+        ctx.fillText(`● ${film.badge}`, 60, 498);
+
+        // Title & Subtitle
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "900 40px 'Inter', sans-serif";
+        ctx.fillText(film.fullTitle, 40, 590);
+
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "24px sans-serif";
+        ctx.fillText(film.sub, 40, 645);
+
+        // Geometric Concentric Rings
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 5; i++) {
+          ctx.beginPath();
+          ctx.arc(320, 810, 40 + i * 28, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // Center Node
+        ctx.fillStyle = film.color;
+        ctx.beginPath();
+        ctx.arc(320, 810, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Bottom CTA Button
+        ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+        ctx.beginPath();
+        ctx.roundRect(40, 950, 560, 100, 16);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.stroke();
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 24px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("ENTER FILM →", 320, 1010);
+
+        pTexture.needsUpdate = true;
+      };
+
+      // Load real hero image
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = film.heroSrc;
+      img.onload = () => renderCard(img);
+
+      // Initial render
+      renderCard();
+
+      const pGeo = new THREE.PlaneGeometry(cardWidth, cardHeight);
       const pMat = new THREE.MeshStandardMaterial({
         map: pTexture,
-        emissive: 0xffffff,
+        emissive: new THREE.Color(0xffffff),
         emissiveMap: pTexture,
-        emissiveIntensity: 0.8,
+        emissiveIntensity: 0.85,
         roughness: 0.15,
         metalness: 0.2,
       });
 
       const pMesh = new THREE.Mesh(pGeo, pMat);
       const posX = startX + idx * spacing;
-      const posZ = -0.6 - Math.abs(idx - 2) * 0.28;
-      const rotY = (idx - 2) * -0.09;
+      // Gentle curve keeping all 5 perfectly in screen safe area
+      const posZ = -0.5 - Math.abs(idx - 2) * 0.14;
+      const rotY = (idx - 2) * -0.06;
 
-      pMesh.position.set(posX, 1.25, posZ);
+      pMesh.position.set(posX, 1.15, posZ);
       pMesh.rotation.y = rotY;
       this.portalMeshes.push(pMesh);
       this.officeGroup.add(pMesh);
 
-      const baseGeo = new THREE.BoxGeometry(portalWidth + 0.1, 0.08, 0.4);
-      const baseMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.9, roughness: 0.2 });
-      const base = new THREE.Mesh(baseGeo, baseMat);
-      base.position.set(posX, 0.04, posZ);
+      // Sleek Brushed Titanium Base
+      const baseGeo = new THREE.BoxGeometry(cardWidth + 0.06, 0.05, 0.3);
+      const base = new THREE.Mesh(baseGeo, this.materials.getBrushedTitanium());
+      base.position.set(posX, 0.025, posZ);
       base.rotation.y = rotY;
       this.officeGroup.add(base);
     });
@@ -392,7 +434,7 @@ export class SceneMasterPortals implements CinematicScene {
     this.sceneGroup.visible = false;
   }
 
-  // Multi-point cinematic camera flight: Campus Sky -> Plaza -> Glass Entrance -> Office Suite
+  // Camera trajectory designed so all visuals stay strictly within the screen
   public updateCamera(cameraController: CinematicCameraController, progress: number): void {
     const p = Math.max(0, Math.min(1, progress));
 
@@ -401,54 +443,53 @@ export class SceneMasterPortals implements CinematicScene {
     let fov: number;
 
     if (p < 0.35) {
-      // Stage 1: High Elevation Exterior Sky & Campus Approach
-      // Camera looks up at Google-style headquarters building and Silver Steel DigiFormation Limited logo
+      // Stage 1: High Elevation Exterior Drone View looking at the Headquarters Building & Silver Steel Logo
       const t = p / 0.35;
       const ease = t * t * (3 - 2 * t);
 
       camPos = [
-        THREE.MathUtils.lerp(0.0, 0.0, ease),
-        THREE.MathUtils.lerp(18.0, 3.8, ease),
-        THREE.MathUtils.lerp(36.0, 10.5, ease),
+        0.0,
+        THREE.MathUtils.lerp(16.0, 3.8, ease),
+        THREE.MathUtils.lerp(32.0, 9.8, ease),
       ];
       camTarget = [
-        THREE.MathUtils.lerp(0.0, 0.0, ease),
-        THREE.MathUtils.lerp(14.5, 2.5, ease),
+        0.0,
+        THREE.MathUtils.lerp(13.5, 2.4, ease),
         THREE.MathUtils.lerp(0.0, 0.8, ease),
       ];
-      fov = THREE.MathUtils.lerp(48, 40, ease);
+      fov = THREE.MathUtils.lerp(46, 40, ease);
     } else if (p < 0.55) {
-      // Stage 2: Gliding through the Grand Glass Facade / Entrance Atrium
+      // Stage 2: Gliding smoothly through the Grand Glass Facade into the Executive Office Atrium
       const t = (p - 0.35) / 0.20;
       const ease = t * t * (3 - 2 * t);
 
       camPos = [
         0.0,
-        THREE.MathUtils.lerp(3.8, 1.85, ease),
-        THREE.MathUtils.lerp(10.5, 4.2, ease),
+        THREE.MathUtils.lerp(3.8, 1.68, ease),
+        THREE.MathUtils.lerp(9.8, 4.0, ease),
       ];
       camTarget = [
         0.0,
-        THREE.MathUtils.lerp(2.5, 1.25, ease),
+        THREE.MathUtils.lerp(2.4, 1.18, ease),
         THREE.MathUtils.lerp(0.8, 0.0, ease),
       ];
       fov = THREE.MathUtils.lerp(40, 36, ease);
     } else {
-      // Stage 3: Inside Executive Office Suite & 5 Processes
+      // Stage 3: Inside Executive Office Suite - All 5 Process Stations Perfectly Framed Within Screen Safe Zone
       const t = (p - 0.55) / 0.45;
       const ease = t * t * (3 - 2 * t);
 
       camPos = [
         0.0,
-        THREE.MathUtils.lerp(1.85, 1.55, ease),
-        THREE.MathUtils.lerp(4.2, 3.2, ease),
+        THREE.MathUtils.lerp(1.68, 1.52, ease),
+        THREE.MathUtils.lerp(4.0, 3.4, ease),
       ];
       camTarget = [
         0.0,
-        THREE.MathUtils.lerp(1.25, 1.15, ease),
-        THREE.MathUtils.lerp(0.0, -0.2, ease),
+        THREE.MathUtils.lerp(1.18, 1.12, ease),
+        THREE.MathUtils.lerp(0.0, -0.3, ease),
       ];
-      fov = THREE.MathUtils.lerp(36, 34, ease);
+      fov = THREE.MathUtils.lerp(36, 35, ease);
     }
 
     cameraController.setWaypoints(
@@ -461,16 +502,16 @@ export class SceneMasterPortals implements CinematicScene {
   public update(sceneProgress: number, globalProgress: number, delta: number): void {
     const time = Date.now() * 0.001;
 
-    // Update headquarters animations (logo gleam, lights)
+    // Update headquarters animations (metallic logo gleams, night floodlights)
     this.headquarters.update(sceneProgress, delta);
 
     // Subtle floating breath on portals
     this.portalMeshes.forEach((mesh, idx) => {
-      mesh.position.y = 1.25 + Math.sin(time + idx * 0.8) * 0.015;
+      mesh.position.y = 1.15 + Math.sin(time + idx * 0.8) * 0.012;
     });
 
     if (this.titleMesh) {
-      this.titleMesh.position.y = 2.7 + Math.cos(time * 0.5) * 0.012;
+      this.titleMesh.position.y = 1.88 + Math.cos(time * 0.5) * 0.008;
     }
 
     // Dynamic HUD context switching between Exterior Campus and Interior Office Suite
