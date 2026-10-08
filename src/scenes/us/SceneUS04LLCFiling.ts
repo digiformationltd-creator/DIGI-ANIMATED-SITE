@@ -68,8 +68,8 @@ export class SceneUS04LLCFiling implements CinematicScene {
       emissive: 0xffffff,
       emissiveMap: this.canvasTexture,
       emissiveIntensity: 0.9,
-      roughness: 0.2,
-      metalness: 0.1,
+      roughness: 0.95,
+      metalness: 0.0,
     });
     this.monitorMesh = new THREE.Mesh(screenGeo, screenMat);
     this.monitorMesh.position.set(0, 1.05, 0);

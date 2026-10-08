@@ -8,7 +8,6 @@ import { SilverLogoSignage } from "./SilverLogoSignage";
  * Features:
  * - Slatted walnut feature wall with physical machined silver DigiFormation logo
  * - Modern executive workstation with dual curved monitors displaying live Companies House & HMRC formation pipelines
- * - Professional male corporate officer (Director Muhammad Haroon) actively reviewing a customer formation order
  * - Believable office architecture: acoustic wood/carpet flooring, glass partitions, linear ceiling luminaires, credenzas
  */
 export class OfficeInterior {
@@ -16,7 +15,6 @@ export class OfficeInterior {
   private materials = MaterialFactory.getInstance();
   private interiorLogo: SilverLogoSignage;
   private canvasTextures: THREE.CanvasTexture[] = [];
-  private officerMesh: THREE.Mesh | null = null;
   private monitorScreenTexture: THREE.CanvasTexture | null = null;
 
   constructor() {
@@ -30,8 +28,8 @@ export class OfficeInterior {
   }
 
   private buildOfficeEnvironment(): void {
-    // A. Flooring: Chevron Dark Oak & Slate Acoustic Carpet Tiles
-    const floorGeo = new THREE.PlaneGeometry(14, 12);
+    // A. Executive Flooring: Deep Charcoal Terrazzo Tile with Chevron Inlay
+    const floorGeo = new THREE.PlaneGeometry(24, 20);
     const floorCanvas = document.createElement("canvas");
     floorCanvas.width = 1024;
     floorCanvas.height = 1024;
@@ -40,15 +38,15 @@ export class OfficeInterior {
       fCtx.fillStyle = "#0c111a";
       fCtx.fillRect(0, 0, 1024, 1024);
 
-      // Acoustic carpet tile texture grid
-      fCtx.strokeStyle = "rgba(255, 255, 255, 0.04)";
-      fCtx.lineWidth = 2;
-      for (let x = 0; x <= 1024; x += 128) {
+      // Fine grid lines simulating high-spec architectural stone tiles
+      fCtx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+      fCtx.lineWidth = 1.5;
+      for (let x = 0; x < 1024; x += 128) {
         fCtx.beginPath();
         fCtx.moveTo(x, 0); fCtx.lineTo(x, 1024);
         fCtx.stroke();
       }
-      for (let y = 0; y <= 1024; y += 128) {
+      for (let y = 0; y < 1024; y += 128) {
         fCtx.beginPath();
         fCtx.moveTo(0, y); fCtx.lineTo(1024, y);
         fCtx.stroke();
@@ -75,78 +73,83 @@ export class OfficeInterior {
       map: floorTexture,
       roughness: 0.42,
       metalness: 0.22,
+      side: THREE.DoubleSide,
     });
     const floorMesh = new THREE.Mesh(floorGeo, floorMat);
     floorMesh.rotation.x = -Math.PI / 2;
-    floorMesh.position.set(0, 0.02, -2.8);
+    floorMesh.position.set(0, 0.0, -1.0);
     floorMesh.receiveShadow = true;
     this.group.add(floorMesh);
 
-    // B. Rear Slatted Walnut Acoustic Feature Wall (Z = -4.2m)
-    const wallGeo = new THREE.PlaneGeometry(14, 4.2);
+    // B. Rear Slatted Walnut Acoustic Feature Wall (Z = -4.5m)
+    const wallGeo = new THREE.PlaneGeometry(24, 5.0);
     const wallMat = new THREE.MeshStandardMaterial({
       color: 0x090e17,
       roughness: 0.75,
       metalness: 0.15,
+      side: THREE.DoubleSide,
     });
     const rearWall = new THREE.Mesh(wallGeo, wallMat);
-    rearWall.position.set(0, 2.1, -4.2);
+    rearWall.position.set(0, 2.5, -4.5);
     this.group.add(rearWall);
 
     // Vertical Acoustic Timber Slats
     const slatMat = this.materials.getDarkWalnutWood();
-    for (let x = -6.8; x <= 6.8; x += 0.18) {
-      if (Math.abs(x) < 1.8) continue; // Keep space behind center logo plate clean
-      const slatGeo = new THREE.BoxGeometry(0.06, 4.15, 0.04);
+    for (let x = -8.5; x <= 8.5; x += 0.20) {
+      if (Math.abs(x) < 2.0) continue; // Keep space behind center logo plate clean
+      const slatGeo = new THREE.BoxGeometry(0.06, 4.95, 0.04);
       const slat = new THREE.Mesh(slatGeo, slatMat);
-      slat.position.set(x, 2.1, -4.18);
+      slat.position.set(x, 2.5, -4.48);
       this.group.add(slat);
     }
 
     // Mount Physical Interior Silver Logo Signage
     const logoGroup = this.interiorLogo.getGroup();
-    logoGroup.position.set(0, 2.4, -4.14);
+    logoGroup.position.set(0, 2.45, -4.44);
     this.group.add(logoGroup);
 
     // Warm LED Wall-Wash Downlights illuminating the Silver Logo
-    const wallWashLight = new THREE.SpotLight(0xfff7ed, 3.2, 8, Math.PI / 3, 0.4);
-    wallWashLight.position.set(0, 3.8, -3.2);
+    const wallWashLight = new THREE.SpotLight(0xfff7ed, 3.2, 10, Math.PI / 3, 0.4);
+    wallWashLight.position.set(0, 3.5, -3.2);
     wallWashLight.target = logoGroup;
     this.group.add(wallWashLight);
 
-    // C. Ceiling & Recessed Linear LED Luminaires (Y = 3.8m)
-    const ceilingGeo = new THREE.PlaneGeometry(14, 12);
-    const ceilingMat = new THREE.MeshStandardMaterial({ color: 0x070b12, roughness: 0.8 });
+    // C. Ceiling & Recessed Linear LED Luminaires (Y = 3.6m)
+    const ceilingGeo = new THREE.PlaneGeometry(24, 20);
+    const ceilingMat = new THREE.MeshStandardMaterial({
+      color: 0x070b12,
+      roughness: 0.85,
+      side: THREE.DoubleSide,
+    });
     const ceilingMesh = new THREE.Mesh(ceilingGeo, ceilingMat);
     ceilingMesh.rotation.x = Math.PI / 2;
-    ceilingMesh.position.set(0, 3.8, -2.8);
+    ceilingMesh.position.set(0, 3.6, -1.0);
     this.group.add(ceilingMesh);
 
     // Linear Architectural Recessed Lights
-    for (let z = -0.5; z >= -4.0; z -= 1.2) {
-      const lightGeo = new THREE.BoxGeometry(7.5, 0.04, 0.08);
+    for (let z = 2.0; z >= -4.0; z -= 1.4) {
+      const lightGeo = new THREE.BoxGeometry(8.5, 0.04, 0.10);
       const lightMat = new THREE.MeshBasicMaterial({ color: 0xfffbeb });
       const lightMesh = new THREE.Mesh(lightGeo, lightMat);
-      lightMesh.position.set(0, 3.78, z);
+      lightMesh.position.set(0, 3.58, z);
       this.group.add(lightMesh);
     }
 
-    // D. Smoked Glass Privacy Partitions (X = ±4.5m)
+    // D. Smoked Glass Privacy Partitions (X = ±5.5m)
     const glassMat = this.materials.getSmokedGlass();
-    const lPartGeo = new THREE.BoxGeometry(0.08, 3.6, 5.5);
+    const lPartGeo = new THREE.BoxGeometry(0.08, 3.6, 6.5);
     const lPart = new THREE.Mesh(lPartGeo, glassMat);
-    lPart.position.set(-4.5, 1.8, -2.5);
+    lPart.position.set(-5.5, 1.8, -2.0);
     this.group.add(lPart);
 
     const rPart = new THREE.Mesh(lPartGeo, glassMat);
-    rPart.position.set(4.5, 1.8, -2.5);
+    rPart.position.set(5.5, 1.8, -2.0);
     this.group.add(rPart);
 
-    // E. Executive Workstation & Credenza
+    // E. Architectural Realism: Walls, Lounge, and Workstation
+    this.buildArchitecturalWalls();
+    this.buildExecutiveLounge();
     this.buildWorkstation();
-
-    // F. First Human Scene: Male Corporate Officer / Director Muhammad Haroon
-    this.buildHumanOfficer();
   }
 
   // Workstation with Dual Monitors & Companies House / HMRC Live Pipeline
@@ -325,50 +328,196 @@ export class OfficeInterior {
     this.group.add(desk);
   }
 
-  // First Human Scene: Male Corporate Officer (Muhammad Haroon, Director)
-  private buildHumanOfficer(): void {
-    const officerGroup = new THREE.Group();
-    officerGroup.position.set(0, 0, -0.68);
-
-    // Load authentic photographic portrait of Muhammad Haroon (Director of DigiFormation LTD)
-    const loader = new THREE.TextureLoader();
-    const officerTex = loader.load("/assets/brand/founder-haroon.png", (tex) => {
-      tex.colorSpace = THREE.SRGBColorSpace;
-      tex.minFilter = THREE.LinearFilter;
-    });
-
-    // Realistic seated officer plane positioned naturally behind workstation desk
-    const officerGeo = new THREE.PlaneGeometry(0.85, 1.15);
-    const officerMat = new THREE.MeshStandardMaterial({
-      map: officerTex,
-      transparent: true,
-      roughness: 0.35,
+  // Architectural Walls & Daylight Window Boundary
+  private buildArchitecturalWalls(): void {
+    // 1. Left Wall with Warm Architectural Drywall & Baseboard (X = -8.0m)
+    const lWallGeo = new THREE.BoxGeometry(0.14, 4.2, 20);
+    const wallMat = new THREE.MeshStandardMaterial({
+      color: 0x111620,
+      roughness: 0.85,
       metalness: 0.05,
+    });
+    const lWall = new THREE.Mesh(lWallGeo, wallMat);
+    lWall.position.set(-8.0, 1.8, -1.0);
+    this.group.add(lWall);
+
+    // Architectural Baseboard
+    const baseboardGeo = new THREE.BoxGeometry(0.16, 0.14, 20);
+    const baseboardMat = this.materials.getDarkWalnutWood();
+    const baseboard = new THREE.Mesh(baseboardGeo, baseboardMat);
+    baseboard.position.set(-7.98, 0.07, -1.0);
+    this.group.add(baseboard);
+
+    // 2. Right Architectural Glass Curtain Wall with Structural Mullions (X = 6.8m)
+    // Looking out toward the daylight campus exterior
+    const mullionMat = this.materials.getMatteBlackMetal();
+    for (let z = 4.0; z >= -6.5; z -= 1.8) {
+      const mullionGeo = new THREE.BoxGeometry(0.12, 4.0, 0.12);
+      const mullion = new THREE.Mesh(mullionGeo, mullionMat);
+      mullion.position.set(6.8, 1.8, z);
+      this.group.add(mullion);
+    }
+
+    const windowGlassGeo = new THREE.PlaneGeometry(16, 3.8);
+    const windowGlassMat = new THREE.MeshPhysicalMaterial({
+      color: 0x88ccff,
+      transmission: 0.85,
+      opacity: 0.95,
+      transparent: true,
+      roughness: 0.05,
+      ior: 1.52,
       side: THREE.DoubleSide,
     });
+    const windowGlass = new THREE.Mesh(windowGlassGeo, windowGlassMat);
+    windowGlass.rotation.y = -Math.PI / 2;
+    windowGlass.position.set(6.78, 1.8, -1.0);
+    this.group.add(windowGlass);
 
-    this.officerMesh = new THREE.Mesh(officerGeo, officerMat);
-    this.officerMesh.position.set(0, 1.05, 0);
-    officerGroup.add(this.officerMesh);
+    // Soft daylight bounce fill from the window
+    const daylightBounce = new THREE.DirectionalLight(0xdbeafe, 1.4);
+    daylightBounce.position.set(5.8, 2.5, -1.0);
+    daylightBounce.target.position.set(0, 1.2, -1.0);
+    this.group.add(daylightBounce);
+    this.group.add(daylightBounce.target);
+  }
 
-    // Realistic desk working shadow
-    const shadowGeo = new THREE.PlaneGeometry(0.9, 0.4);
-    const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.45 });
-    const shadow = new THREE.Mesh(shadowGeo, shadowMat);
-    shadow.rotation.x = -Math.PI / 2;
-    shadow.position.set(0, 0.749, 0.08);
-    officerGroup.add(shadow);
+  // Luxury Executive Lounge: Leather Sofa, Low Marble Table, and Arc Floor Lamp
+  private buildExecutiveLounge(): void {
+    const loungeGroup = new THREE.Group();
+    loungeGroup.position.set(-2.8, 0, -1.4);
+    loungeGroup.rotation.y = 0.28; // Subtle welcoming angle towards room center
 
-    this.group.add(officerGroup);
+    const leatherMat = new THREE.MeshStandardMaterial({
+      color: 0x141821, // Deep espresso / rich midnight executive leather
+      roughness: 0.42,
+      metalness: 0.18,
+    });
+
+    // 1. Sofa Main Base Plinth
+    const baseGeo = new THREE.BoxGeometry(1.85, 0.14, 0.82);
+    const sofaBase = new THREE.Mesh(baseGeo, leatherMat);
+    sofaBase.position.set(0, 0.18, 0);
+    sofaBase.castShadow = true;
+    loungeGroup.add(sofaBase);
+
+    // Brushed titanium legs
+    const legGeo = new THREE.CylinderGeometry(0.022, 0.015, 0.12, 16);
+    const legMat = this.materials.getBrushedTitanium();
+    const legPositions = [
+      [-0.85, 0.06, 0.35],
+      [0.85, 0.06, 0.35],
+      [-0.85, 0.06, -0.35],
+      [0.85, 0.06, -0.35],
+    ];
+    legPositions.forEach(([lx, ly, lz]) => {
+      const leg = new THREE.Mesh(legGeo, legMat);
+      leg.position.set(lx, ly, lz);
+      loungeGroup.add(leg);
+    });
+
+    // 2. Dual Deep Leather Seat Cushions
+    for (let i = -1; i <= 1; i += 2) {
+      const seatCushionGeo = new THREE.BoxGeometry(0.85, 0.18, 0.72);
+      const seatCushion = new THREE.Mesh(seatCushionGeo, leatherMat);
+      seatCushion.position.set(i * 0.44, 0.34, 0.02);
+      seatCushion.castShadow = true;
+      loungeGroup.add(seatCushion);
+
+      // Tufted Backrest Cushions
+      const backCushionGeo = new THREE.BoxGeometry(0.84, 0.42, 0.18);
+      const backCushion = new THREE.Mesh(backCushionGeo, leatherMat);
+      backCushion.position.set(i * 0.44, 0.62, -0.28);
+      backCushion.castShadow = true;
+      loungeGroup.add(backCushion);
+    }
+
+    // Armrests Left & Right
+    const armGeo = new THREE.BoxGeometry(0.14, 0.34, 0.80);
+    const lArm = new THREE.Mesh(armGeo, leatherMat);
+    lArm.position.set(-0.92, 0.42, 0);
+    loungeGroup.add(lArm);
+
+    const rArm = new THREE.Mesh(armGeo, leatherMat);
+    rArm.position.set(0.92, 0.42, 0);
+    loungeGroup.add(rArm);
+
+    // 3. Low Executive Marble / Smoked Glass Coffee Table
+    const tableGroup = new THREE.Group();
+    tableGroup.position.set(0, 0, 0.72);
+
+    const tableTopGeo = new THREE.BoxGeometry(0.92, 0.03, 0.52);
+    const tableTopMat = new THREE.MeshStandardMaterial({
+      color: 0x0a0f18,
+      roughness: 0.15,
+      metalness: 0.85,
+    });
+    const tableTop = new THREE.Mesh(tableTopGeo, tableTopMat);
+    tableTop.position.set(0, 0.32, 0);
+    tableTop.castShadow = true;
+    tableGroup.add(tableTop);
+
+    // Table Titanium Frame
+    const frameGeo = new THREE.BoxGeometry(0.94, 0.015, 0.54);
+    const frame = new THREE.Mesh(frameGeo, legMat);
+    frame.position.set(0, 0.305, 0);
+    tableGroup.add(frame);
+
+    const tLegGeo = new THREE.BoxGeometry(0.03, 0.30, 0.03);
+    [[-0.42, 0.15, 0.22], [0.42, 0.15, 0.22], [-0.42, 0.15, -0.22], [0.42, 0.15, -0.22]].forEach(([tx, ty, tz]) => {
+      const tl = new THREE.Mesh(tLegGeo, legMat);
+      tl.position.set(tx, ty, tz);
+      tableGroup.add(tl);
+    });
+
+    loungeGroup.add(tableGroup);
+
+    // 4. Modern Architectural Arc Floor Lamp
+    const lampGroup = new THREE.Group();
+    lampGroup.position.set(-1.3, 0, -0.65);
+
+    // Heavy Granite Base Disc
+    const lampBaseGeo = new THREE.CylinderGeometry(0.18, 0.19, 0.04, 32);
+    const lampBase = new THREE.Mesh(lampBaseGeo, this.materials.getPolishedGranite());
+    lampBase.position.set(0, 0.02, 0);
+    lampGroup.add(lampBase);
+
+    // Curved Slender Stem Tube
+    const stemCurve = new THREE.QuadraticBezierCurve3(
+      new THREE.Vector3(0, 0.04, 0),
+      new THREE.Vector3(0, 2.3, 0),
+      new THREE.Vector3(0.65, 2.1, 0.4)
+    );
+    const stemGeo = new THREE.TubeGeometry(stemCurve, 32, 0.015, 12, false);
+    const stem = new THREE.Mesh(stemGeo, this.materials.getPolishedChrome());
+    lampGroup.add(stem);
+
+    // Frosted Luminaire Dome Shade
+    const shadeGeo = new THREE.SphereGeometry(0.14, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.6);
+    const shadeMat = new THREE.MeshStandardMaterial({
+      color: 0xffedd5,
+      emissive: 0xffeedd,
+      emissiveIntensity: 0.9,
+      roughness: 0.2,
+      side: THREE.DoubleSide,
+    });
+    const shade = new THREE.Mesh(shadeGeo, shadeMat);
+    shade.position.set(0.65, 2.1, 0.4);
+    shade.rotation.x = Math.PI;
+    lampGroup.add(shade);
+
+    // Warm Ambient Light illuminating the executive lounge
+    const warmLight = new THREE.PointLight(0xffedd5, 1.8, 5.0, 1.8);
+    warmLight.position.set(0.65, 1.95, 0.4);
+    warmLight.castShadow = true;
+    lampGroup.add(warmLight);
+
+    loungeGroup.add(lampGroup);
+
+    this.group.add(loungeGroup);
   }
 
   public update(time: number): void {
     this.interiorLogo.update(time);
-
-    // Subtle natural breathing / executive posture micro-motion
-    if (this.officerMesh) {
-      this.officerMesh.position.y = 1.05 + Math.sin(time * 1.2) * 0.003;
-    }
   }
 
   public dispose(): void {

@@ -59,13 +59,50 @@ export const FILM_REGISTRY: Record<FilmId, FilmConfig> = {
     seoTitle: "DigiFormation — Cinematic Business Ecosystem & Enterprise Solutions",
     seoDescription: "Explore DigiFormation's 5 cinematic service experiences: UK LTD Formation, US LLC Formation, Company Compliance, Digital Product Build, and Digi Biz OS.",
     timelineSteps: [
-      { label: "01 UK LTD", pos: 0.1 },
-      { label: "02 US LLC", pos: 0.3 },
+      { label: "00 CAMPUS", pos: 0.0 },
+      { label: "01 UK LTD", pos: 0.16 },
+      { label: "02 US LLC", pos: 0.33 },
       { label: "03 COMPLY", pos: 0.5 },
-      { label: "04 BUILD", pos: 0.7 },
-      { label: "05 BIZ OS", pos: 0.9 },
+      { label: "04 BUILD", pos: 0.67 },
+      { label: "05 BIZ OS", pos: 0.83 },
     ],
-    createScenes: () => [new SceneMasterPortals()],
+    createScenes: () => {
+      const sc0 = new SceneMasterPortals();
+      sc0.startProgress = 0.00;
+      sc0.endProgress = 0.16;
+
+      const sc1 = new Scene05CompaniesHouse();
+      sc1.startProgress = 0.16;
+      sc1.endProgress = 0.33;
+      sc1.kicker = "01 · UK LTD FORMATION PROCESS";
+      sc1.title = "Companies House Live WebFiling";
+
+      const sc2 = new SceneUS04LLCFiling();
+      sc2.startProgress = 0.33;
+      sc2.endProgress = 0.50;
+      sc2.kicker = "02 · US LLC FORMATION PROCESS";
+      sc2.title = "Wyoming & Delaware State Rails";
+
+      const sc3 = new SceneComp04Intervention();
+      sc3.startProgress = 0.50;
+      sc3.endProgress = 0.67;
+      sc3.kicker = "03 · STATUTORY COMPLIANCE";
+      sc3.title = "HMRC VAT & MTD Live Ledger";
+
+      const sc4 = new SceneDigi02Website();
+      sc4.startProgress = 0.67;
+      sc4.endProgress = 0.83;
+      sc4.kicker = "04 · DIGITAL PRODUCT FORGE";
+      sc4.title = "Enterprise Architecture & 3D Web";
+
+      const sc5 = new SceneOS01VoiceWake();
+      sc5.startProgress = 0.83;
+      sc5.endProgress = 1.00;
+      sc5.kicker = "05 · DIGI BIZ OS GRAND FINALE";
+      sc5.title = "Autonomous Voice OS & Multi-Agent Swarm";
+
+      return [sc0, sc1, sc2, sc3, sc4, sc5];
+    },
   },
 
   "uk-ltd": {

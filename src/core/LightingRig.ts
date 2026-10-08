@@ -5,7 +5,6 @@ export class LightingRig {
   private keyLight: THREE.DirectionalLight;
   private fillLight: THREE.DirectionalLight;
   private rimLight: THREE.DirectionalLight;
-  private screenBounceLight: THREE.PointLight;
 
   constructor(scene: THREE.Scene) {
     // 1. Ambient environmental tone (Natural Daylight Sky Blue)
@@ -38,26 +37,19 @@ export class LightingRig {
     this.rimLight.position.set(10, 20, -25);
     scene.add(this.rimLight);
 
-    // 5. Emissive monitor bounce light (Soft diffuse fill without harsh specular hotspot)
-    this.screenBounceLight = new THREE.PointLight(0xdce7f5, 0.15, 2.5, 2.0);
-    this.screenBounceLight.position.set(0, 0.95, 0.6);
-    scene.add(this.screenBounceLight);
+  // 5. No harsh specular point light / flashlight on screens
   }
 
-  public setScreenIntensity(intensity: number): void {
-    this.screenBounceLight.intensity = intensity;
+  public setScreenIntensity(_intensity: number): void {
+    // Disabled to prevent white flashlight hotspot
   }
 
   // Consistent, bright cinematic daylight
-  public setAtmosphere(progress: number): void {
+  public setAtmosphere(_progress: number): void {
     this.ambientLight.intensity = 1.2;
     this.keyLight.intensity = 2.5;
     this.fillLight.intensity = 0.9;
     this.rimLight.intensity = 1.6;
-
-    // Screen emissive bounce is subtle and diffuse without harsh blinding specular
-    const screenFocus = Math.min(1, Math.max(0, (progress - 0.2) / 0.8));
-    this.screenBounceLight.intensity = 0.08 + screenFocus * 0.22;
   }
 
   public setQuality(quality: "HIGH" | "MEDIUM" | "LOW"): void {
@@ -75,6 +67,5 @@ export class LightingRig {
     scene.remove(this.keyLight);
     scene.remove(this.fillLight);
     scene.remove(this.rimLight);
-    scene.remove(this.screenBounceLight);
   }
 }

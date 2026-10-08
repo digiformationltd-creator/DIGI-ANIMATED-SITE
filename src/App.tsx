@@ -36,16 +36,24 @@ export function App() {
 
   const timelineRef = useRef<CinematicTimeline | null>(null);
 
-  // Switch film and update browser history
+  const chapterAnchorMap: Record<FilmId, number> = {
+    master: 0.0,
+    "uk-ltd": 0.16,
+    "us-llc": 0.33,
+    compliance: 0.50,
+    "digital-build": 0.67,
+    "biz-os": 0.83,
+  };
+
+  // Switch film or smooth-scroll to chapter along the continuous timeline
   const handleSelectFilm = useCallback((filmId: FilmId) => {
-    const nextFilm = getFilmById(filmId);
-    setCurrentFilm(nextFilm);
-    if (typeof window !== "undefined") {
-      window.history.pushState({ filmId }, "", nextFilm.route);
-      window.scrollTo({ top: 0, behavior: "instant" });
-    }
     if (timelineRef.current) {
-      timelineRef.current.scrollTo(0);
+      const targetPos = chapterAnchorMap[filmId] ?? 0;
+      timelineRef.current.scrollTo(targetPos);
+    }
+    const nextFilm = getFilmById(filmId);
+    if (typeof window !== "undefined") {
+      window.history.replaceState({ filmId }, "", nextFilm.route);
     }
     AudioAtmosphereEngine.getInstance().emitEvent("service:selected", { filmId });
   }, []);
@@ -124,6 +132,18 @@ export function App() {
     };
   }, [handleSelectFilm]);
 
+  // Dynamically map scroll progress to active chapter film
+  const getActiveChapterFilm = (p: number): FilmConfig => {
+    if (p < 0.16) return FILM_REGISTRY.master;
+    if (p < 0.33) return FILM_REGISTRY["uk-ltd"];
+    if (p < 0.50) return FILM_REGISTRY["us-llc"];
+    if (p < 0.67) return FILM_REGISTRY.compliance;
+    if (p < 0.83) return FILM_REGISTRY["digital-build"];
+    return FILM_REGISTRY["biz-os"];
+  };
+
+  const activeChapterFilm = currentFilm.id === "master" ? getActiveChapterFilm(smoothProgress) : currentFilm;
+
   const handleJump = (targetProgress: number) => {
     if (timelineRef.current) {
       timelineRef.current.scrollTo(targetProgress);
@@ -131,9 +151,9 @@ export function App() {
   };
 
   return (
-    <div className="relative min-h-[500vh] bg-[#07090c] text-white overflow-x-hidden">
+    <div className="relative min-h-[600vh] bg-[#07090c] text-white overflow-x-hidden">
       {/* Dynamic SEO & DOM Accessibility Layer */}
-      <CinemaSEO film={currentFilm} />
+      <CinemaSEO film={activeChapterFilm} />
 
       {/* Cinematic Asset Loader */}
       <CinematicLoader ready={ready} progressPercent={loadPercent} />
@@ -146,7 +166,13 @@ export function App() {
       />
 
       {/* 2. Fixed Fullscreen Cinema Canvas Viewport (Shared WebGL Interactive 3D Overlay) */}
-      <div className="fixed inset-0 z-10 w-full h-full pointer-events-none">
+      <div
+        className="fixed inset-0 z-10 w-full h-full pointer-events-none transition-opacity duration-300"
+        style={{
+          opacity: currentFilm.id === "master" && smoothProgress < 0.14 ? 0 : 1,
+          visibility: currentFilm.id === "master" && smoothProgress < 0.14 ? "hidden" : "visible",
+        }}
+      >
         <CinemaViewport
           progress={progress}
           smoothProgress={smoothProgress}
@@ -163,7 +189,7 @@ export function App() {
 
       {/* Top Header Navigation & Filmstrip Switcher */}
       <CinemaNavigation
-        currentFilm={currentFilm}
+        currentFilm={activeChapterFilm}
         onSelectFilm={handleSelectFilm}
         onToggleDebug={() => setIsDebug(!isDebug)}
         isDebug={isDebug}

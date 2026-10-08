@@ -148,7 +148,13 @@ export const CinemaViewport: React.FC<CinemaViewportProps> = ({
           [camTarget.x, camTarget.y, camTarget.z]
         );
 
-        renderer.render(scene, camera);
+        // In Master Nexus startup sequence (p < 0.14), keep WebGL idle and clear with transparent alpha
+        if (filmRef.current.id === "master" && smoothProgressRef.current < 0.14) {
+          renderer.setClearColor(0x000000, 0);
+          renderer.clear();
+        } else {
+          renderer.render(scene, camera);
+        }
       }
 
       rafId = requestAnimationFrame(animate);

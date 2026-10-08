@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX, Eye, EyeOff } from "lucide-react";
 import { FilmConfig } from "../types/film";
+import { HeroSequencePlayer } from "./HeroSequencePlayer";
 
 interface RealisticCinemaEngineProps {
   progress: number;
@@ -22,13 +23,15 @@ export const RealisticCinemaEngine: React.FC<RealisticCinemaEngineProps> = ({
   const noiseNodeRef = useRef<AudioNode | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Notify ready on mount
+  // Notify ready when engine is primed
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onReady?.();
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [onReady]);
+    if (film.id !== "master") {
+      const timer = setTimeout(() => {
+        onReady?.();
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [film.id, onReady]);
 
   // Audio atmosphere synthesis (authentic corporate room tone & acoustic ambience)
   const toggleSound = () => {
@@ -93,14 +96,17 @@ export const RealisticCinemaEngine: React.FC<RealisticCinemaEngineProps> = ({
   // Optical Camera Crane Matrix: Smooth dynamic push-in and pan along scroll timeline
   const isMaster = film.id === "master";
   
-  // Transition between Campus Establishing plate and Executive Office Interior plate
-  const campusOpacity = isMaster ? Math.max(0, 1 - Math.max(0, (progress - 0.58) / 0.18)) : 0;
-  const officeOpacity = isMaster ? clamp((progress - 0.62) / 0.18) : 1;
+  // Campus establishing plate to interior office transition (Chapter 00: 0.0 -> 0.16)
+  const normCampusProgress = isMaster ? Math.min(1, progress / 0.16) : 0;
+  const campusOpacity = isMaster
+    ? Math.max(0, 1 - Math.max(0, (normCampusProgress - 0.70) / 0.30))
+    : 0;
+  const officeOpacity = isMaster ? 0 : 1;
 
-  // Continuous Camera Dolly Transform (Smooth 35mm optical push-in toward the entrance monument)
-  const scale = 1.0 + progress * 0.45;
-  const panX = -progress * 6.8;
-  const panY = -progress * 4.5;
+  // Uncropped wide establishing shot starting at 1.0, smoothly pushing in toward the window
+  const scale = isMaster ? 1.0 + normCampusProgress * 0.32 : 1.0;
+  const panX = isMaster ? -normCampusProgress * 4.0 : 0;
+  const panY = isMaster ? -normCampusProgress * 2.5 : 0;
 
   return (
     <div
@@ -108,40 +114,35 @@ export const RealisticCinemaEngine: React.FC<RealisticCinemaEngineProps> = ({
       className="realistic-cinema-engine"
       aria-label="Real camera documentary film"
     >
-      {/* 1. Chapter 00: Real Corporate Campus Establishing Cinema Plate (Google-Style Glass Architecture) */}
+      {/* 1. Chapter 00: Real Drone Descent & Executive Office Reveal (50-Frame Real Film Sequence) */}
       {isMaster && (
+        <HeroSequencePlayer
+          progress={progress}
+          isMaster={isMaster}
+          onLoaded={onReady}
+        />
+      )}
+
+      {/* 2. Executive Office Interior Cinema Plate (Only for sub-film direct landing) */}
+      {!isMaster && (
         <div
-          className="cinema-plate-layer campus-plate"
+          className="cinema-plate-layer office-plate"
           style={{
-            opacity: campusOpacity,
-            transform: `scale(${scale}) translate(${panX}%, ${panY}%)`,
+            opacity: officeOpacity,
+            transform: `scale(${1.0 + progress * 0.08})`,
           }}
         >
-          <img
-            src="/assets/brand/campus-digiformation-hq.jpg"
-            alt="DigiFormation Global Headquarters Campus"
-            className="cinema-still-poster"
-          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#06090e] via-[#090d15]/80 to-[#0c121d]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(30,58,138,0.25)_0%,transparent_70%)]" />
         </div>
       )}
 
-      {/* 2. Executive Office Interior Cinema Plate featuring Director Haroon & Vance */}
-      <div
-        className="cinema-plate-layer office-plate"
-        style={{
-          opacity: officeOpacity,
-          transform: isMaster
-            ? `scale(${1.0 + (progress - 0.6) * 0.15})`
-            : `scale(${1.0 + progress * 0.08})`,
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-t from-[#06090e] via-[#090d15]/80 to-[#0c121d]" />
-        {/* Real Executive Suite Architectural Slat Wall and Mood Lighting */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(30,58,138,0.25)_0%,transparent_70%)]" />
-      </div>
-
       {/* 3. Authentic 35mm Photochemical Film Grain Overlay */}
-      <div className="cinema-film-grain" aria-hidden="true" />
+      <div
+        className="cinema-film-grain"
+        style={{ opacity: isMaster && progress < 0.16 ? 0.01 : 0.045 }}
+        aria-hidden="true"
+      />
 
       {/* 4. Anamorphic Cine Lens Peripheral Vignette */}
       <div className="cinema-anamorphic-vignette" aria-hidden="true" />

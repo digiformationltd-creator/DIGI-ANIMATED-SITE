@@ -179,6 +179,20 @@ export class MaterialFactory {
     return this.cache.get(key) as THREE.MeshStandardMaterial;
   }
 
+  // Polished Black Granite / Marble
+  public getPolishedGranite(): THREE.MeshStandardMaterial {
+    const key = "polishedGranite";
+    if (!this.cache.has(key)) {
+      const mat = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(0x0e1117),
+        roughness: 0.12,
+        metalness: 0.65,
+      });
+      this.cache.set(key, mat);
+    }
+    return this.cache.get(key) as THREE.MeshStandardMaterial;
+  }
+
   public disposeAll(): void {
     for (const mat of this.cache.values()) {
       mat.dispose();
